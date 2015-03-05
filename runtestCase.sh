@@ -7,4 +7,11 @@ dockerimg=${1}
 runcommand="/bin/bash -c 'root/bin/runwrapper.sh'"
 [[ ${2-original} == "bash" ]] && runcommand=/bin/bash
 
-docker run -t -i -v $referenceDirectory:/mnt/datastore/bundledFiles -v /home/ubuntu/gnos_down:/mnt/datastore/workflow_data/gnos_down -v /home/ubuntu/testdata/PC58s-000001.DELLY.somaticFilter.highConf.bedpe.txt:/mnt/datastore/workflow_data/PC58s-000001.DELLY.somaticFilter.highConf.bedpe.txt -v $PWD/testConfig.ini:/mnt/datastore/workflow_data/workflow.ini -v /home/ubuntu/testdata_results:/mnt/datastore/testdata $dockerimg $runcommand
+docker run -t -i \
+	-v $referenceDirectory:/mnt/datastore/bundledFiles \
+	-v /home/ubuntu/gnos_down:/mnt/datastore/workflow_data/gnos_down \
+	-v /home/ubuntu/testdata/PC58s-000001.DELLY.somaticFilter.highConf.bedpe.txt:/mnt/datastore/workflow_data/PC58s-000001.DELLY.somaticFilter.highConf.bedpe.txt \
+	-v $PWD/testConfig.ini:/mnt/datastore/workflow_data/workflow.ini \
+	-v /home/ubuntu/workspace:/mnt/datastore/testdata \
+	-v /home/ubuntu/testdata_results:/mnt/datastore/resultdata \
+	$dockerimg $runcommand
