@@ -73,6 +73,8 @@ ADD Roddy /root/bin/Roddy
 
 ADD runwrapper.sh /root/bin/runwrapper.sh
 
+ADD scripts/getFinalCNEFile.py /root/bin/getFinalCNEFile.py
+
 ADD scripts/setupSGE.sh /root/bin/sgeConfig.txt
 
 RUN cd /root/bin/Roddy/dist/runtimeDevel && ln -sf groovy* groovy && ln -sf jdk* jdk && ln -sf jdk/jre jre; \
