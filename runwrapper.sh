@@ -13,16 +13,17 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	# Relink files
 
-	tumorbam=${tumorBams[$i]}
-	dellyfile=${dellyFiles[$i]}
+	export tumorbam=${tumorBams[$i]}
+	export dellyfile=${dellyFiles[$i]}
 
 	export pid=${aliquotIDs[$i]}
-	pidPath=/mnt/datastore/testdata/$pid
-	alignmentFolder=$pidPath/alignment
-	snvCallingFolder=$pidPath/mpileup
-	aceSeqFolder=$pidPath/ACESeq
-	indelCallingFolder=$pidPath/platypus_indel
-	dellyFolder=$pidPath/delly
+	export pidPath=/mnt/datastore/testdata/$pid
+	export alignmentFolder=$pidPath/alignment
+	export snvCallingFolder=$pidPath/mpileup
+	export aceSeqFolder=$pidPath/ACESeq
+	export indelCallingFolder=$pidPath/platypus_indel
+	export dellyFolder=$pidPath/delly
+	export JAVA_HOME=/root/bin/Roddy/dist/runtimeDevel/jre
 
 	mkdir -p $alignmentFolder $dellyFolder
 
@@ -76,64 +77,71 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	# Collect the log files
 
-	resultFolder=/mnt/datastore/resultdata
-	resultLogFolder=/mnt/datastore/resultdata/${pid}_logs
-	resultFilesFolder=/mnt/datastore/resultdata/data
+	export resultFolder=/mnt/datastore/resultdata
+	export resultLogFolder=/mnt/datastore/resultdata/${pid}_logs
+	export resultFilesFolder=/mnt/datastore/resultdata/data
 	cp -r $pidPath/roddyExecutionStore $resultLogFolder
 	cp /root/logs/*$pid* $resultLogFolder
 
-	roddyVersionString=`grep useRoddyVersion /root/bin/Roddy/applicationPropertiesAllLocal.ini`
+	export roddyVersionString=`grep useRoddyVersion /root/bin/Roddy/applicationPropertiesAllLocal.ini`
 	export pluginVersionString=`grep usePluginVersion /root/bin/Roddy/applicationPropertiesAllLocal.ini`
-	workflowVersion=`/root/bin/Roddy/dist/runtimeDevel/groovy/bin/groovy -e 'println args[0].split("[=]")[1].split("[,]").find { it.contains("COWorkflows") }.split("[:]")[1].replace(".", "-")' $pluginVersionString`
+	export workflowVersion=`/root/bin/Roddy/dist/runtimeDevel/groovy/bin/groovy -e 'println args[0].split("[=]")[1].split("[,]").find { it.contains("COWorkflows") }.split("[:]")[1].replace(".", "-")' $pluginVersionString`
 	# Copy the result files
 	#cp -r $pidPath ${pidPath}_final
-	prefixSNV=${pid}.dkfz-snvCalling_${workflowVersion}.${date}
-	prefixIndel=${pid}.dkfz-indelCalling_${workflowVersion}.${date}.somatic
-	prefixACESeq=${pid}.dkfz-copyNumberEstimation_${workflowVersion}.${date}.somatic
+	export prefixSNV=${pid}.dkfz-snvCalling_${workflowVersion}.${date}
+	export prefixIndel=${pid}.dkfz-indelCalling_${workflowVersion}.${date}.somatic
+	export prefixACESeq=${pid}.dkfz-copyNumberEstimation_${workflowVersion}.${date}.somatic
 
-	snvVCFAllFile=$resultFolder/${prefixSNV}.all.snv_mnv.vcf.gz
-	snvTbxAllFile=$resultFolder/${prefixSNV}.all.snv_mnv.vcf.gz.tbi
-	snvVCFGermlineFile=$resultFolder/${prefixSNV}.germline.snv_mnv.vcf.gz
-	snvTbxGermlineFile=$resultFolder/${prefixSNV}.germline.snv_mnv.vcf.gz.tbi
-        snvVCFSomaticFile=$resultFolder/${prefixSNV}.somatic.snv_mnv.vcf.gz
-        snvTbxSomaticFile=$resultFolder/${prefixSNV}.somatic.snv_mnv.vcf.gz.tbi
- 	snvOptFile=$resultFolder/${prefixSNV}.snv_mnv.tar.gz
-	indelVCFAllFile=$resultFolder${prefixIndel}.all.snv_mnv.vcf.gz
-        indelTbxAllFile=$resultFolder${prefixIndel}.all.snv_mnv.vcf.gz.tbi
-        indelVCFGermlineFile=$resultFolder/${prefixIndel}.germline.indel.vcf.gz
-        indelTbxGermlineFile=$resultFolder/${prefixIndel}.germline.indel.vcf.gz.tbi
-        indelVCFSomaticFile=$resultFolder/${prefixIndel}.somatic.indel.vcf.gz
-        indelTbxSomaticFile=$resultFolder/${prefixIndel}.somatic.indel.vcf.gz.tbi
-        indelOptFile=$resultFolder/${prefixIndel}.indel.tar.gz
-        aceSeqVCFFile=$resultFolder/${prefixACESeq}.somatic.cnv.vcf.gz
-        aceSeqTbxFile=$resultFolder/${prefixACESeq}.somatic.cnv.vcf.gz.tbi
-        aceSeqOptFile=$resultFolder/${prefixACESeq}.somatic.cnv.tar.gz
+	# Combined output files
+	export snvVCFAllFile=${resultFolder}/${prefixSNV}_all.somatic.snv_mnv.vcf.gz
+	export snvTbxAllFile=${resultFolder}/${prefixSNV}_all.somatic.snv_mnv.vcf.gz.tbi
+	# Separated output files
+	export snvVCFGermlineFile=${resultFolder}/${prefixSNV}.germline.snv_mnv.vcf.gz
+	export snvTbxGermlineFile=${resultFolder}/${prefixSNV}.germline.snv_mnv.vcf.gz.tbi
+	export snvVCFSomaticFile=${resultFolder}/${prefixSNV}.somatic.snv_mnv.vcf.gz
+	export snvTbxSomaticFile=${resultFolder}/${prefixSNV}.somatic.snv_mnv.vcf.gz.tbi
+	# Tarball
+	export snvOptFile=${resultFolder}/${prefixSNV}_all.snv_mnv.tar.gz
 
-	cp ${snvCallingFolder}/*pancan.vcf.gz ${snvVCFAllFile}
-	cp ${snvCallingFolder}/*pancan.vcf.gz.tbi ${snvTbxAllFile}
-        perl -e 'use warnings; use strict; open(IN, "zcat $ARGV[0] |") or die "Could not open the zipped vcf file $ARGV[0]\n";open(GER, "| bgzip > $ARGV[1]") or die "Could not open the germline outfile $ARGV[1]\n";open(SOM, "| bgzip > $ARGV[2]") or die "Could not open the somatic outfile $ARGV[2]\n";while(<IN>){if($_ =~ /^#/){print GER $_; print SOM $_; next;}if($_ =~ /GERMLINE/){print GER $_;next;}if($_ =~ /SOMATIC/){print SOM $_; next;}}' ${snvCallingFolder}/*pancan.vcf.gz ${snvVCFGermlineFile} ${snvVCFSomaticFile} || exit 2
+	# Combined output files
+	export indelVCFAllFile=${resultFolder}/${prefixIndel}_all.snv_mnv.vcf.gz
+	export indelTbxAllFile=${resultFolder}/${prefixIndel}_all.snv_mnv.vcf.gz.tbi
+	# Separated output files
+	export indelVCFGermlineFile=${resultFolder}/${prefixIndel}.germline.indel.vcf.gz
+	export indelTbxGermlineFile=${resultFolder}/${prefixIndel}.germline.indel.vcf.gz.tbi
+	export indelVCFSomaticFile=${resultFolder}/${prefixIndel}.somatic.indel.vcf.gz
+	export indelTbxSomaticFile=${resultFolder}/${prefixIndel}.somatic.indel.vcf.gz.tbi
+	# Tarball
+	export indelOptFile=${resultFolder}/${prefixIndel}.indel.tar.gz
 
-        cp ${indelCallingFolder}/*pancan.vcf.gz ${indelVCFAllFile}
-        cp ${indelCallingFolder}/*pancan.vcf.gz.tbi ${indelTbxAllFile}
-        perl -e 'use warnings; use strict; open(IN, "zcat $ARGV[0] |") or die "Could not open the zipped vcf file $ARGV[0]\n";open(GER, "| bgzip > $ARGV[1]") or die "Could not open the germline outfile $ARGV[1]\n";open(SOM, "| bgzip > $ARGV[2]") or die "Could not open the somatic outfile $ARGV[2]\n";while(<IN>){if($_ =~ /^#/){print GER $_; print SOM $_; next;}if($_ =~ /GERMLINE/){print GER $_;next;}if($_ =~ /SOMATIC/){print SOM $_; next;}}' ${indelCallingFolder}/*pancan.vcf.gz ${indelVCFGermlineFile} ${indelVCFSomaticFile} || exit 3
+	export aceSeqVCFFile=${resultFolder}/${prefixACESeq}.somatic.cnv.vcf.gz
+	export aceSeqTbxFile=${resultFolder}/${prefixACESeq}.somatic.cnv.vcf.gz.tbi
+	export aceSeqOptFile=${resultFolder}/${prefixACESeq}.somatic.cnv.tar.gz
+
+	#cp ${snvCallingFolder}/*pancan.vcf.gz ${snvVCFAllFile}
+	#cp ${snvCallingFolder}/*pancan.vcf.gz.tbi ${snvTbxAllFile}
+	perl -e 'use warnings; use strict; open(IN, "zcat $ARGV[0] |") or die "Could not open the zipped vcf file $ARGV[0]\n";open(GER, "| bgzip > $ARGV[1]") or die "Could not open the germline outfile $ARGV[1]\n";open(SOM, "| bgzip > $ARGV[2]") or die "Could not open the somatic outfile $ARGV[2]\n";while(<IN>){if($_ =~ /^#/){print GER $_; print SOM $_; next;}if($_ =~ /GERMLINE/){print GER $_;next;}if($_ =~ /SOMATIC/){print SOM $_; next;}}' ${snvCallingFolder}/*pancan.vcf.gz ${snvVCFGermlineFile} ${snvVCFSomaticFile} || exit 2
+
+	#cp ${indelCallingFolder}/*pancan.vcf.gz ${indelVCFAllFile}
+	#cp ${indelCallingFolder}/*pancan.vcf.gz.tbi ${indelTbxAllFile}
+	perl -e 'use warnings; use strict; open(IN, "zcat $ARGV[0] |") or die "Could not open the zipped vcf file $ARGV[0]\n";open(GER, "| bgzip > $ARGV[1]") or die "Could not open the germline outfile $ARGV[1]\n";open(SOM, "| bgzip > $ARGV[2]") or die "Could not open the somatic outfile $ARGV[2]\n";while(<IN>){if($_ =~ /^#/){print GER $_; print SOM $_; next;}if($_ =~ /GERMLINE/){print GER $_;next;}if($_ =~ /SOMATIC/){print SOM $_; next;}}' ${indelCallingFolder}/*pancan.vcf.gz ${indelVCFGermlineFile} ${indelVCFSomaticFile} || exit 3
 
 	tabix -p vcf ${snvVCFGermlineFile}
 	tabix -p vcf ${snvVCFSomaticFile}
 	tabix -p vcf ${indelVCFGermlineFile}
 	tabix -p vcf ${indelVCFSomaticFile}
 
-	finalCNEFile=`python /root/bin/get_vcfNamePCAWG.py $pid $aceSeqFolder`
+	export finalCNEFile=`python /root/bin/getFinalCNEFile.py $pid $aceSeqFolder`
 
-#Tar up SNV tarball
-        (tar -cvzf ${resultFolder}/${prefixSNV}_all.somatic.snv_mnv.tar.gz $snvCallingFolder/*error_plot_before_filter.pdf $snvCallingFolder/*allSNVdiagnosticsPlots.pdf) &
-        #And the indel tarball
-        (tar -cvzf ${resultFolder}/${prefixSNV}_all.somatic.indel.tar.gz $indelCallingFolder/*raw*) &
-        #And finally the aceseq tarball
-        (tar --exclude=*pancan* -cvzf ${resultFolder}/${prefixACESeq}_all.somatic.cnv.tar.gz ${aceSeqFolder}/*.txt ${aceSeqFolder}/*.gz ${aceSeqFolder}/*.tbi ${aceSeqFolder}/*.png ${aceSeqFolder}/cnv_snp/ ${aceSeqFolder}/plots/) &
-#       exit 0
-        wait
+	#Tar up SNV tarball
+	(cd ${snvCallingFolder}; tar -cvzf ${resultFolder}/${prefixSNV}_all.somatic.snv_mnv.tar.gz *pancan.vcf.gz* *error_plot_before_filter.pdf *allSNVdiagnosticsPlots.pdf) &
+	#And the indel tarball
+	(cd ${indelCallingFolder}; tar -cvzf ${resultFolder}/${prefixIndel}_all.somatic.indel.tar.gz *raw*) &
+	#And finally the aceseq tarball
+	(cd ${aceSeqFolder}; tar --exclude=*pancan* -cvzf ${resultFolder}/${prefixACESeq}_all.somatic.cnv.tar.gz *.txt *.gz *.tbi *.png cnv_snp/ plots/) &
 
+	wait
 done
 
-# Always do that?
+# Always do that? 
 echo 0

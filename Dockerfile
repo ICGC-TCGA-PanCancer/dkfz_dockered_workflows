@@ -65,6 +65,8 @@ RUN apt-get update; easy_install Atlas; apt-get -y install libatlas-base-dev gfo
 
 RUN easy_install scipy==0.12.0
 
+RUN apt-get update; apt-get -y install libcairo2
+
 ADD scripts/sgeResetup.sh /root/sgeResetup.sh
 
 ADD Roddy /root/bin/Roddy
