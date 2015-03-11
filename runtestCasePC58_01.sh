@@ -1,5 +1,4 @@
 referenceDirectory=/home/ubuntu/dependencies/bundledFiles
-pidDirectory=/home/ubuntu/testdata/PC58s-000001
 
 [[ -z $1 ]] && echo "Either container id or - has to be submitted" && exit 0
 dockerimg=${1}
@@ -11,7 +10,7 @@ docker run -t -i \
 	-v $referenceDirectory:/mnt/datastore/bundledFiles \
 	-v /home/ubuntu/gnos_down:/mnt/datastore/workflow_data/gnos_down \
 	-v /home/ubuntu/sampledata/PC58s-000001.DELLY.somaticFilter.highConf.bedpe.txt:/mnt/datastore/workflow_data/PC58s-000001.DELLY.somaticFilter.highConf.bedpe.txt \
-	-v $PWD/testConfig.ini:/mnt/datastore/workflow_data/workflow.ini \
+	-v $PWD/testConfigPC58_01.ini:/mnt/datastore/workflow_data/workflow.ini \
 	-v /home/ubuntu/workspace:/mnt/datastore/testdata \
 	-v /home/ubuntu/testdata_results:/mnt/datastore/resultdata \
 	$dockerimg $runcommand
