@@ -1,5 +1,4 @@
 referenceDirectory=/home/ubuntu/dependencies/bundledFiles
-pidDirectory=/home/ubuntu/testdata/PC58s-000001
 
 [[ -z $1 ]] && echo "Either container id or - has to be submitted" && exit 0
 dockerimg=${1}
