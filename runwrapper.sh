@@ -67,12 +67,22 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	[[ $runIndel == true ]] && (sleep $sleepIndel; bash roddy.sh rerun dkfzPancancerBase@indelCalling $pid --waitforjobs --useconfig=applicationPropertiesAllLocal.ini > $indellog; echo $? > $indelrc) & ps2=$!
 
 	wait $ps0 $ps1 $ps2
-	
-	# Roddy's built-in wait does not work in docker images...
-	while [[ `qstat -t | wc -l` > 2 ]]; do
-		sleep 60
-	done
 
+        # Roddy's built-in wait does not work reliable in docker images...
+        while [[ `qstat -t | wc -l` > 2 ]]; do
+                sleep 60
+        done
+
+	if [[ ! `cat $aceseqrc` -eq 0 || ! `cat $snvrc` -eq 0 || ! `cat $indelrc` -eq 0 ]] 
+	then
+		echo There was an error code in one of the workflows
+		echo "CNE returned " `cat $aceseqrc`
+		echo "SNV returned " `cat $snvrc`
+		echo "Ind returned " `cat $indelrc`
+		exit 1
+	fi
+	# From now on, ignore any errors and return 0!
+	
 	# Collect files and write them to the output folder
 
 	# Collect the log files
@@ -141,6 +151,10 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	(cd ${aceSeqFolder}; tar --exclude=*pancan* -cvzf ${resultFolder}/${prefixACESeq}_all.somatic.cnv.tar.gz *.txt *.gz *.tbi *.png cnv_snp/ plots/) &
 
 	wait
+
+	# Finalize access rights
+	cd $resultFolder; find -type d | xargs chmod g+x,o+x; find -type f | xargs chmod g+rw,o+rw
+	cd /mnt/datastore/testdata; find -type d | xargs chmod g+x,o+x; find -type f | xargs chmod g+rw,o+rw
 done
 
 # Always do that? 
