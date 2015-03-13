@@ -67,6 +67,9 @@ RUN easy_install scipy==0.12.0
 
 RUN apt-get update; apt-get -y install libcairo2 libjpeg-dev
 
+RUN pip install pysam==0.7.4; \
+ easy_install matplotlib==1.0.1;
+
 ADD scripts/sgeResetup.sh /root/sgeResetup.sh
 
 ADD Roddy /root/bin/Roddy

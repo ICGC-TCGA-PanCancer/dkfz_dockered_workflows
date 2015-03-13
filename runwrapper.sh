@@ -64,7 +64,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	[[ $runACESeq == true ]] && (bash roddy.sh rerun dkfzPancancerBase@copyNumberEstimation $pid --waitforjobs --useconfig=applicationPropertiesAllLocal.ini > $aceseqlog; echo $? > $aceseqrc) & ps0=$!
 	[[ $runSNV == true ]] && (sleep $sleepSNV; bash roddy.sh rerun dkfzPancancerBase@snvCalling $pid --waitforjobs --useconfig=applicationPropertiesAllLocal.ini > $snvlog; echo $? > $snvrc) & ps1=$!
-	[[ $runIndel == true ]] && (sleep $sleepIndel; bash roddy.sh rerun dkfzPancancerBase@indelCalling $pid --waitforjobs --useconifg=applicationPropertiesAllLocal.ini > $indellog; echo $? > $indelrc) & ps2=$!
+	[[ $runIndel == true ]] && (sleep $sleepIndel; bash roddy.sh rerun dkfzPancancerBase@indelCalling $pid --waitforjobs --useconfig=applicationPropertiesAllLocal.ini > $indellog; echo $? > $indelrc) & ps2=$!
 
 	wait $ps0 $ps1 $ps2
 	
