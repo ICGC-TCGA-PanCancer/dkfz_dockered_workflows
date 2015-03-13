@@ -67,8 +67,9 @@ RUN easy_install scipy==0.12.0
 
 RUN apt-get update; apt-get -y install libcairo2 libjpeg-dev
 
-RUN pip install pysam==0.7.4; \
- easy_install matplotlib==1.0.1;
+RUN easy_install -U 'distribute'; \
+    pip install pysam==0.7.4; \
+    easy_install matplotlib==1.0.1;
 
 ADD scripts/sgeResetup.sh /root/sgeResetup.sh
 
@@ -88,3 +89,7 @@ RUN cd /root/bin/Roddy/dist/runtimeDevel && ln -sf groovy* groovy && ln -sf jdk*
     qconf -Mc /root/bin/sgeConfig.txt; \
     mkdir -p /mnt/datastore/workflow_data; \
     mkdir /root/logs;
+
+ADD patches/impute2.sh /root/bin/Roddy/dist/plugins/COWorkflows_1.0.114/resources/analysisTools/copyNumberEstimationWorkflow/impute2.sh
+ADD patches/impute2_X.sh /root/bin/Roddy/dist/plugins/COWorkflows_1.0.114/resources/analysisTools/copyNumberEstimationWorkflow/impute2_X.sh
+
