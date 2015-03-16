@@ -92,7 +92,7 @@ body(segment)[[4]] = substitute(print("hack")) # minimum width
 fit = segmentByPairedPSCBS(data, knownSegments = knownSegments, tbn = FALSE, 
 	nperm = nperm, min.width = min.width, undoTCN = 5, undoDH = 5, 
 	undo.splits = "sdundo", undo.SD = undo.SD, trim = trim, alphaTCN = alphaTCN, 
-	alphaDH = alphaDH, verbose = -10, seed 25041988)
+	alphaDH = alphaDH, verbose = -10, seed = 25041988)
     
 if (h != 0) {
 	fit = pruneByHClust(fit, h = h, merge = TRUE, update = TRUE, verbose = -10)
