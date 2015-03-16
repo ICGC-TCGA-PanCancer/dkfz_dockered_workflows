@@ -90,6 +90,5 @@ RUN cd /root/bin/Roddy/dist/runtimeDevel && ln -sf groovy* groovy && ln -sf jdk*
     mkdir -p /mnt/datastore/workflow_data; \
     mkdir /root/logs;
 
-ADD patches/impute2.sh /root/bin/Roddy/dist/plugins/COWorkflows_1.0.114/resources/analysisTools/copyNumberEstimationWorkflow/impute2.sh
-ADD patches/impute2_X.sh /root/bin/Roddy/dist/plugins/COWorkflows_1.0.114/resources/analysisTools/copyNumberEstimationWorkflow/impute2_X.sh
+ADD patches/pscbs_all.R /root/bin/Roddy/dist/plugins/COWorkflows_1.0.114/resources/analysisTools/copyNumberEstimationWorkflow/pscbs_all.txt
 
