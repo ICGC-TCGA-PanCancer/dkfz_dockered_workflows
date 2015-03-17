@@ -68,19 +68,30 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	wait $ps0 $ps1 $ps2
 
-        # Roddy's built-in wait does not work reliable in docker images...
-        while [[ `qstat -t | wc -l` > 2 ]]; do
-                sleep 60
-        done
+	# Finalize access rights for the workspace folder
+	cd /mnt/datastore/testdata; find -type d | xargs chmod u+rwx,g+rwx,o+rwx; find -type f | xargs chmod u+rw,g+rw,o+rw
 
-	if [[ ! `cat $aceseqrc` -eq 0 || ! `cat $snvrc` -eq 0 || ! `cat $indelrc` -eq 0 ]] 
-	then
-		echo There was an error code in one of the workflows
-		echo "CNE returned " `cat $aceseqrc`
-		echo "SNV returned " `cat $snvrc`
-		echo "Ind returned " `cat $indelrc`
-		exit 1
-	fi
+
+	# Roddy's built-in wait does not work reliable in docker images...
+	while [[ `qstat -t | wc -l` > 2 ]]; do
+			sleep 60
+	done
+	
+	# Now check all the job state logfiles from the last three entries in the result folder.
+	# Only take the last directory of every workflow.
+	jobstateFiles=( `ls -d $pidPath/r*/*copy*/job* | tail -n 1` `ls -d $pidPath/r*/*snv*/job* | tail -n 1` `ls -d $pidPath/r*/*indel*/job* | tail -n 1` )
+	failed=false
+	for i in ${jobstateFiles[@]}
+	do
+		cntStarted=`cat $i | grep -v null: | grep ":57427:" | wc -l`
+		cntSuccessful=`cat $i | grep -v null: | grep ":0:"| wc -l`
+		cntErrornous=`expr $cntStarted - $cntSuccessful`
+		[[ $cntErrornous -gt 0 ]] && failed=true && echo "Errors found for jobs in $i"
+		[[ $cntErrornous == 0 ]] && echo "No errors found for $i"
+	done
+	
+	[[ $failed == true ]] && echo "There was at least one error in a job status logfile. Will exit now!" && exit 5
+
 	# From now on, ignore any errors and return 0!
 	
 	# Collect files and write them to the output folder
@@ -152,9 +163,8 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	wait
 
-	# Finalize access rights
-	cd $resultFolder; find -type d | xargs chmod g+x,o+x; find -type f | xargs chmod g+rw,o+rw
-	cd /mnt/datastore/testdata; find -type d | xargs chmod g+x,o+x; find -type f | xargs chmod g+rw,o+rw
+	# Finalize access rights for the result folder
+	cd $resultFolder; find -type d | xargs chmod u+rwx,g+rwx,o+rwx; find -type f | xargs chmod u+rw,g+rw,o+rw
 done
 
 # Always do that? 
