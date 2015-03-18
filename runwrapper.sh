@@ -155,11 +155,11 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	export finalCNEFile=`python /root/bin/getFinalCNEFile.py $pid $aceSeqFolder`
 
 	#Tar up SNV tarball
-	(cd ${snvCallingFolder}; tar -cvzf ${resultFolder}/${prefixSNV}_all.somatic.snv_mnv.tar.gz *pancan.vcf.gz* *error_plot_before_filter.pdf *allSNVdiagnosticsPlots.pdf) &
+	(cd ${snvCallingFolder}; tar -cvzf ${resultFolder}/${prefixSNV}_all.somatic.snv_mnv.tar.gz * ) &
 	#And the indel tarball
-	(cd ${indelCallingFolder}; tar -cvzf ${resultFolder}/${prefixIndel}_all.somatic.indel.tar.gz *raw*) &
+	(cd ${indelCallingFolder}; tar -cvzf ${resultFolder}/${prefixIndel}_all.somatic.indel.tar.gz * ) &
 	#And finally the aceseq tarball
-	(cd ${aceSeqFolder}; tar --exclude=*pancan* -cvzf ${resultFolder}/${prefixACESeq}_all.somatic.cnv.tar.gz *.txt *.gz *.tbi *.png cnv_snp/ plots/) &
+	(cd ${aceSeqFolder}; tar --exclude=*pancan* -cvzf ${resultFolder}/${prefixACESeq}_all.somatic.cnv.tar.gz *.txt *.gz *.tbi *.png cnv_snp/ plots/ ) &
 
 	wait
 
