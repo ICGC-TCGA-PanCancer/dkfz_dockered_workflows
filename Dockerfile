@@ -91,4 +91,4 @@ RUN cd /root/bin/Roddy/dist/runtimeDevel && ln -sf groovy* groovy && ln -sf jdk*
     mkdir /root/logs;
 
 ADD patches/pscbs_all.R /root/bin/Roddy/dist/plugins/COWorkflows_1.0.114/resources/analysisTools/copyNumberEstimationWorkflow/pscbs_all.R
-
+ADD patches/projectsPanCancer.xml /root/bin/Roddy/dist/resources/configurationFiles/projectsPanCancer.xml

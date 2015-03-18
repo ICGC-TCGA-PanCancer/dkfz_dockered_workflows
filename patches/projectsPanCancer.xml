@@ -1,0 +1,65 @@
+<configuration configurationType='project' name='dkfzPancancerBase' description='' imports="coBaseProject" usedresourcessize="l">
+    <availableAnalyses>
+        <analysis id='snvCalling' configuration='snvCallingAnalysis'/>
+        <analysis id='indelCalling' configuration='indelCallingAnalysis'/>
+        <analysis id="copyNumberEstimation" configuration="copyNumberEstimationAnalysis"/>
+        <analysis id="telomereExtraction" configuration="telomereExtractionAnalysis"/>
+    </availableAnalyses>
+    <configurationvalues>
+
+        <cvalue name='analysisMethodNameOnInput' value='exon_sequencing' type='string'/>
+        <cvalue name='analysisMethodNameForOutDir' value='exome' type='string'/>
+        <cvalue name='inputBaseDirectory' value='/mnt/datastore/testdata' type='path'/>
+        <cvalue name='outputBaseDirectory' value='/mnt/datastore/testdata' type='path'/>
+	<cvalue name='outputFileGroup' value='root'/>
+        
+        <cvalue name='outputAnalysisBaseDirectory' value='${outputBaseDirectory}/${pid}' type='path'/>
+
+        <cvalue name='aceseqOutputDirectory' value='${outputAnalysisBaseDirectory}/ACEseq' type="path"/>
+        <cvalue name='dellyOutputDirectory' value='${outputAnalysisBaseDirectory}/delly' type="path"/>
+        <cvalue name='crestOutputDirectory' value='${outputAnalysisBaseDirectory}/crest' type="path"/>
+        <cvalue name='cnvSnpOutputDirectory' value='${aceseqOutputDirectory}/cnv_snp' type="path"/>
+        <cvalue name='imputeOutputDirectory' value='${outputAnalysisBaseDirectory}/ACEseq/phasing' type="path"/>
+        <cvalue name='plotOutputDirectory' value='${outputAnalysisBaseDirectory}/ACEseq/plots' type="path"/>
+
+
+        <cvalue name='runOnPancan' value='true' type='boolean'/>
+        <cvalue name='EMAIL' value='k.kleinheinz@dkfz.de' type='string'/>
+
+        <cvalue name="sharedFilesBaseDirectory" value="/mnt/datastore/bundledFiles" type="path"/>
+        <cvalue name="SET_PATH" value='${sharedFilesBaseDirectory}/centralBinaries/bedtools2-2.19.1/bin:${sharedFilesBaseDirectory}/centralBinaries/Platypus_0.7.4:${PATH}' type="string"/>
+        <cvalue name='libloc_PSCBS' value='' type='string'/>
+        <cvalue name='libloc_flexclust' value='' type='string'/>
+
+        <cvalue name="extractSamplesFromOutputFiles" value="true"/>
+        <cvalue name="useCentralAnalysisArchive" value="true"/>
+
+        <cvalue name="runFilter" value="false" type="boolean"/>
+
+        <cvalue name='TARGETSIZE' value='74569526' type="integer"/>
+        <cvalue name='CALL_SNP' value="1" type="integer"/>
+
+        <cvalue name="runIndelVCFFilter" value="false" type="boolean"/>
+        <cvalue name="runIndelDeepAnnotation" value="false" type="boolean"/>
+        <cvalue name="runSNVMetaCallingStep" value="true" type="boolean" />
+        <cvalue name="runIndelAnnotation" value="true" type="boolean"/>
+
+        <cvalue name="RSCRIPT_BINARY" value="${sharedFilesBaseDirectory}/centralBinaries/R-2.15.0/bin/Rscript"/>
+        <cvalue name="PLATYPUS_BINARY"  value="${sharedFilesBaseDirectory}/centralBinaries/Platypus_0.7.4/Platypus.py"/>
+        <cvalue name='PYTHON_BINARY' value='python' type="string"/>
+        <cvalue name="GC_CONTENT_FILE" value="${chromosomeSizesBaseDirectory_human}/hg19_GRch37_100genomes_gc_content_10kb.txt" type="path"/>
+        <cvalue name="PLATYPUS_BUFFER_SIZE" value="100000" type="integer"/>
+        <cvalue name="PLATYPUS_MAX_READS" value="10000000" type="integer"/>
+
+
+        <cvalue name="CONFIDENCE_OPTS" value='"-c 0"' type="string" description="set to default settings."/>
+
+        <cvalue name="FASTAFROMBED_BINARY" value="${sharedFilesBaseDirectory}/centralBinaries/bedtools/bin/fastaFromBed" type="path" />
+        <cvalue name="SAMTOOLS_BINARY" value="${sharedFilesBaseDirectory}/centralBinaries/samtools-0.1.19/samtools"/>
+        <cvalue name="BCFTOOLS_BINARY" value="${sharedFilesBaseDirectory}/centralBinaries/samtools-0.1.19/bcftools/bcftools"/>
+        <cvalue name="VCFTOOLS_SORT_BINARY" value="${sharedFilesBaseDirectory}/centralBinaries/vcftools_0.1.12b/bin/vcf-sort"/>
+
+        <cvalue name='chromosomeLengthFile_hg19' value='${sharedFilesBaseDirectory}/otherfiles/hg19/hg19_chrTotalLength.tsv' type="path"/>
+
+    </configurationvalues>
+</configuration>
