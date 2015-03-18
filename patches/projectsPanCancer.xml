@@ -34,7 +34,7 @@
         <cvalue name="extractSamplesFromOutputFiles" value="true"/>
         <cvalue name="useCentralAnalysisArchive" value="true"/>
 
-        <cvalue name="runFilter" value="false" type="boolean"/>
+        <cvalue name="runFilter" value="true" type="boolean"/>
 
         <cvalue name='TARGETSIZE' value='74569526' type="integer"/>
         <cvalue name='CALL_SNP' value="1" type="integer"/>
