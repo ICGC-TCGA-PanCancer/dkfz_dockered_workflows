@@ -110,8 +110,8 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	# Copy the result files
 	#cp -r $pidPath ${pidPath}_final
 	export prefixSNV=${pid}.dkfz-snvCalling_${workflowVersion}.${date}
-	export prefixIndel=${pid}.dkfz-indelCalling_${workflowVersion}.${date}.somatic
-	export prefixACESeq=${pid}.dkfz-copyNumberEstimation_${workflowVersion}.${date}.somatic
+	export prefixIndel=${pid}.dkfz-indelCalling_${workflowVersion}.${date}
+	export prefixACESeq=${pid}.dkfz-copyNumberEstimation_${workflowVersion}.${date}
 
 	# Combined output files
 	export snvVCFAllFile=${resultFolder}/${prefixSNV}_all.somatic.snv_mnv.vcf.gz
@@ -162,9 +162,15 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	(cd ${aceSeqFolder}; tar --exclude=*pancan* -cvzf ${resultFolder}/${prefixACESeq}_all.somatic.cnv.tar.gz *.txt *.gz *.tbi *.png cnv_snp/ plots/ ) &
 
 	wait
+	
+	cd $resultFolder
+	for i in `ls $pid.dkfz*`
+	do
+		cat $i | md5sum | cut -b 1-33 > ${i}.md5
+	done
 
 	# Finalize access rights for the result folder
-	cd $resultFolder; find -type d | xargs chmod u+rwx,g+rwx,o+rwx; find -type f | xargs chmod u+rw,g+rw,o+rw
+	find -type d | xargs chmod u+rwx,g+rwx,o+rwx; find -type f | xargs chmod u+rw,g+rw,o+rw
 done
 
 # Always do that? 
