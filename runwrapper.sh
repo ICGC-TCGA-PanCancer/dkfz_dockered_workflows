@@ -166,8 +166,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	wait
 
-	cd $resultFolder
-	for i in `ls $pid.dkfz*`
+	for i in `ls $resultFolder/$pid.dkfz*`
 	do
 		cat $i | md5sum | cut -b 1-33 > ${i}.md5
 	done
