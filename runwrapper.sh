@@ -71,12 +71,13 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	# Finalize access rights for the workspace folder
 	cd /mnt/datastore/testdata; find -type d | xargs chmod u+rwx,g+rwx,o+rwx; find -type f | xargs chmod u+rw,g+rw,o+rw
 
-
+	echo "Wait for Roddy jobs to finish"
 	# Roddy's built-in wait does not work reliable in docker images...
 	while [[ `qstat -t | wc -l` > 2 ]]; do
 			sleep 60
 	done
 	
+	echo "Check job state logfiles"
 	# Now check all the job state logfiles from the last three entries in the result folder.
 	# Only take the last directory of every workflow.
 	jobstateFiles=( `ls -d $pidPath/r*/*copy*/job* | tail -n 1` `ls -d $pidPath/r*/*snv*/job* | tail -n 1` `ls -d $pidPath/r*/*indel*/job* | tail -n 1` )
@@ -98,6 +99,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	# Collect the log files
 
+	echo "Copying log files"
 	export resultFolder=/mnt/datastore/resultdata
 	export resultLogFolder=/mnt/datastore/resultdata/${pid}_logs
 	export resultFilesFolder=/mnt/datastore/resultdata/data
@@ -113,38 +115,30 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	export prefixIndel=${pid}.dkfz-indelCalling_${workflowVersion}.${date}
 	export prefixACESeq=${pid}.dkfz-copyNumberEstimation_${workflowVersion}.${date}
 
-	# Combined output files
-	export snvVCFAllFile=${resultFolder}/${prefixSNV}_all.somatic.snv_mnv.vcf.gz
-	export snvTbxAllFile=${resultFolder}/${prefixSNV}_all.somatic.snv_mnv.vcf.gz.tbi
 	# Separated output files
 	export snvVCFGermlineFile=${resultFolder}/${prefixSNV}.germline.snv_mnv.vcf.gz
 	export snvTbxGermlineFile=${resultFolder}/${prefixSNV}.germline.snv_mnv.vcf.gz.tbi
 	export snvVCFSomaticFile=${resultFolder}/${prefixSNV}.somatic.snv_mnv.vcf.gz
 	export snvTbxSomaticFile=${resultFolder}/${prefixSNV}.somatic.snv_mnv.vcf.gz.tbi
 	# Tarball
-	export snvOptFile=${resultFolder}/${prefixSNV}_all.snv_mnv.tar.gz
+	export snvOptFile=${resultFolder}/${prefixSNV}_all.somatic.snv_mnv.tar.gz
 
-	# Combined output files
-	export indelVCFAllFile=${resultFolder}/${prefixIndel}_all.snv_mnv.vcf.gz
-	export indelTbxAllFile=${resultFolder}/${prefixIndel}_all.snv_mnv.vcf.gz.tbi
 	# Separated output files
 	export indelVCFGermlineFile=${resultFolder}/${prefixIndel}.germline.indel.vcf.gz
 	export indelTbxGermlineFile=${resultFolder}/${prefixIndel}.germline.indel.vcf.gz.tbi
 	export indelVCFSomaticFile=${resultFolder}/${prefixIndel}.somatic.indel.vcf.gz
 	export indelTbxSomaticFile=${resultFolder}/${prefixIndel}.somatic.indel.vcf.gz.tbi
 	# Tarball
-	export indelOptFile=${resultFolder}/${prefixIndel}.indel.tar.gz
+	export indelOptFile=${resultFolder}/${prefixIndel}_all.somatic.indel.tar.gz
 
 	export aceSeqVCFFile=${resultFolder}/${prefixACESeq}.somatic.cnv.vcf.gz
 	export aceSeqTbxFile=${resultFolder}/${prefixACESeq}.somatic.cnv.vcf.gz.tbi
 	export aceSeqOptFile=${resultFolder}/${prefixACESeq}_all.somatic.cnv.tar.gz
 
-	#cp ${snvCallingFolder}/*pancan.vcf.gz ${snvVCFAllFile}
-	#cp ${snvCallingFolder}/*pancan.vcf.gz.tbi ${snvTbxAllFile}
+	echo "Filter and / or copy final files"
+
 	perl -e 'use warnings; use strict; open(IN, "zcat $ARGV[0] |") or die "Could not open the zipped vcf file $ARGV[0]\n";open(GER, "| bgzip > $ARGV[1]") or die "Could not open the germline outfile $ARGV[1]\n";open(SOM, "| bgzip > $ARGV[2]") or die "Could not open the somatic outfile $ARGV[2]\n";while(<IN>){if($_ =~ /^#/){print GER $_; print SOM $_; next;}if($_ =~ /GERMLINE/){print GER $_;next;}if($_ =~ /SOMATIC/){print SOM $_; next;}}' ${snvCallingFolder}/*pancan.vcf.gz ${snvVCFGermlineFile} ${snvVCFSomaticFile} || exit 2
 
-	#cp ${indelCallingFolder}/*pancan.vcf.gz ${indelVCFAllFile}
-	#cp ${indelCallingFolder}/*pancan.vcf.gz.tbi ${indelTbxAllFile}
 	perl -e 'use warnings; use strict; open(IN, "zcat $ARGV[0] |") or die "Could not open the zipped vcf file $ARGV[0]\n";open(GER, "| bgzip > $ARGV[1]") or die "Could not open the germline outfile $ARGV[1]\n";open(SOM, "| bgzip > $ARGV[2]") or die "Could not open the somatic outfile $ARGV[2]\n";while(<IN>){if($_ =~ /^#/){print GER $_; print SOM $_; next;}if($_ =~ /GERMLINE/){print GER $_;next;}if($_ =~ /SOMATIC/){print SOM $_; next;}}' ${indelCallingFolder}/*pancan.vcf.gz ${indelVCFGermlineFile} ${indelVCFSomaticFile} || exit 3
 
 	tabix -p vcf ${snvVCFGermlineFile}
@@ -156,7 +150,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	cp $finalCNEFile ${aceSeqVCFFile}
 	tabix -p vcf ${aceSeqVCFFile}
 
-
+	echo "Create tarballs"
 	#Tar up SNV tarball
 	(cd ${pidPath}; tar -cvzf ${snvOptFile} mpileup ) &
 	#And the indel tarball
@@ -166,11 +160,14 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	wait
 
+	echo "Calculating md5 sums"
 	for i in `ls $resultFolder/$pid.dkfz*`
 	do
+		echo "call md5sum for $i"
 		cat $i | md5sum | cut -b 1-33 > ${i}.md5
 	done
 
+	echo "Setup proper access rights"
 	# Finalize access rights for the result folder
 	find -type d | xargs chmod u+rwx,g+rwx,o+rwx; find -type f | xargs chmod u+rw,g+rw,o+rw
 
