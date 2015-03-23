@@ -65,7 +65,7 @@ RUN apt-get update; easy_install Atlas; apt-get -y install libatlas-base-dev gfo
 
 RUN easy_install scipy==0.12.0
 
-RUN apt-get update; apt-get -y install libcairo2 libjpeg-dev
+RUN apt-get update; apt-get -y install libcairo2 libjpeg-dev ghostscript
 
 RUN easy_install -U 'distribute'; \
     pip install pysam==0.6; \
@@ -92,3 +92,4 @@ RUN cd /root/bin/Roddy/dist/runtimeDevel && ln -sf groovy* groovy && ln -sf jdk*
 
 ADD patches/pscbs_all.R /root/bin/Roddy/dist/plugins/COWorkflows_1.0.114/resources/analysisTools/copyNumberEstimationWorkflow/pscbs_all.R
 ADD patches/projectsPanCancer.xml /root/bin/Roddy/dist/resources/configurationFiles/projectsPanCancer.xml
+ADD patches/MAF_plots.r /root/bin/Roddy/dist/plugins/COWorkflows_1.0.114/resources/analysisTools/snvPipeline/MAF_plots.r
