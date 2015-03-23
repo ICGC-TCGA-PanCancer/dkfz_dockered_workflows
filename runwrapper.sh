@@ -137,7 +137,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	export aceSeqVCFFile=${resultFolder}/${prefixACESeq}.somatic.cnv.vcf.gz
 	export aceSeqTbxFile=${resultFolder}/${prefixACESeq}.somatic.cnv.vcf.gz.tbi
-	export aceSeqOptFile=${resultFolder}/${prefixACESeq}.somatic.cnv.tar.gz
+	export aceSeqOptFile=${resultFolder}/${prefixACESeq}_all.somatic.cnv.tar.gz
 
 	#cp ${snvCallingFolder}/*pancan.vcf.gz ${snvVCFAllFile}
 	#cp ${snvCallingFolder}/*pancan.vcf.gz.tbi ${snvTbxAllFile}
@@ -153,16 +153,19 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	tabix -p vcf ${indelVCFSomaticFile}
 
 	export finalCNEFile=`python /root/bin/getFinalCNEFile.py $pid $aceSeqFolder`
+	cp $finalCNEFile ${aceSeqVCFFile}
+	tabix -p vcf ${aceSeqVCFFile}
+
 
 	#Tar up SNV tarball
-	(cd ${snvCallingFolder}; tar -cvzf ${resultFolder}/${prefixSNV}_all.somatic.snv_mnv.tar.gz * ) &
+	(cd ${pidPath}; tar -cvzf ${snvOptFile} mpileup ) &
 	#And the indel tarball
-	(cd ${indelCallingFolder}; tar -cvzf ${resultFolder}/${prefixIndel}_all.somatic.indel.tar.gz * ) &
+	(cd ${pidPath}; tar -cvzf ${indelOptFile} platypus_indel ) &
 	#And finally the aceseq tarball
-	(cd ${aceSeqFolder}; tar --exclude=*pancan* -cvzf ${resultFolder}/${prefixACESeq}_all.somatic.cnv.tar.gz *.txt *.gz *.tbi *.png cnv_snp/ plots/ ) &
+	(cd ${pidPath}; tar --exclude ACEseq/phasing* -cvzf ${aceSeqOptFile} ACEseq ) &
 
 	wait
-	
+
 	cd $resultFolder
 	for i in `ls $pid.dkfz*`
 	do
@@ -171,6 +174,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	# Finalize access rights for the result folder
 	find -type d | xargs chmod u+rwx,g+rwx,o+rwx; find -type f | xargs chmod u+rw,g+rw,o+rw
+
 done
 
 # Always do that? 
