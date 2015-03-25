@@ -121,7 +121,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	export snvVCFSomaticFile=${resultFolder}/${prefixSNV}.somatic.snv_mnv.vcf.gz
 	export snvTbxSomaticFile=${resultFolder}/${prefixSNV}.somatic.snv_mnv.vcf.gz.tbi
 	# Tarball
-	export snvOptFile=${resultFolder}/${prefixSNV}_all.somatic.snv_mnv.tar.gz
+	export snvOptFile=${resultFolder}/${prefixSNV}.somatic.snv_mnv.tar.gz
 
 	# Separated output files
 	export indelVCFGermlineFile=${resultFolder}/${prefixIndel}.germline.indel.vcf.gz
@@ -129,11 +129,11 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	export indelVCFSomaticFile=${resultFolder}/${prefixIndel}.somatic.indel.vcf.gz
 	export indelTbxSomaticFile=${resultFolder}/${prefixIndel}.somatic.indel.vcf.gz.tbi
 	# Tarball
-	export indelOptFile=${resultFolder}/${prefixIndel}_all.somatic.indel.tar.gz
+	export indelOptFile=${resultFolder}/${prefixIndel}.somatic.indel.tar.gz
 
 	export aceSeqVCFFile=${resultFolder}/${prefixACESeq}.somatic.cnv.vcf.gz
 	export aceSeqTbxFile=${resultFolder}/${prefixACESeq}.somatic.cnv.vcf.gz.tbi
-	export aceSeqOptFile=${resultFolder}/${prefixACESeq}_all.somatic.cnv.tar.gz
+	export aceSeqOptFile=${resultFolder}/${prefixACESeq}.somatic.cnv.tar.gz
 
 	echo "Filter and / or copy final files"
 
@@ -161,7 +161,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	wait
 
 	echo "Calculating md5 sums"
-	for i in `ls $resultFolder/$pid.dkfz*`
+	for i in `ls $resultFolder/$pid.dkfz*.tbi $resultFolder/$pid.dkfz*.gz`
 	do
 		echo "call md5sum for $i"
 		cat $i | md5sum | cut -b 1-33 > ${i}.md5
