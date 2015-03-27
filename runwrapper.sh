@@ -148,6 +148,10 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	export finalCNEFile=`python /root/bin/getFinalCNEFile.py $pid $aceSeqFolder`
 	cp $finalCNEFile ${aceSeqVCFFile}
+	cp $aceSeqFolder/plots/*.json ${resultFolder}/${prefixACESeq}.cnv.gcbias.json
+
+#	`python /root/bin/convertTabToJson.py -k KEY -f TAB_SEP_FILE -i ${pid}`
+	
 	tabix -p vcf ${aceSeqVCFFile}
 
 	echo "Create tarballs"
@@ -156,7 +160,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	#And the indel tarball
 	(cd ${pidPath}; tar -cvzf ${indelOptFile} platypus_indel ) &
 	#And finally the aceseq tarball
-	(cd ${pidPath}; tar --exclude ACEseq/phasing* -cvzf ${aceSeqOptFile} ACEseq ) &
+	(cd ${pidPath}; tar -cvzf ${aceSeqOptFile} ACEseq ) &
 
 	wait
 

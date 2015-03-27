@@ -81,6 +81,8 @@ ADD runwrapper.sh /root/bin/runwrapper.sh
 
 ADD scripts/getFinalCNEFile.py /root/bin/getFinalCNEFile.py
 
+ADD scripts/convertTabToJson.py /root/bin/convertTabToJson.py
+
 ADD scripts/setupSGE.sh /root/bin/sgeConfig.txt
 
 RUN cd /root/bin/Roddy/dist/runtimeDevel && ln -sf groovy* groovy && ln -sf jdk* jdk && ln -sf jdk/jre jre; \
@@ -90,8 +92,5 @@ RUN cd /root/bin/Roddy/dist/runtimeDevel && ln -sf groovy* groovy && ln -sf jdk*
     mkdir -p /mnt/datastore/workflow_data; \
     mkdir /root/logs;
 
-ADD patches/pscbs_all.R /root/bin/Roddy/dist/plugins/COWorkflows_1.0.114/resources/analysisTools/copyNumberEstimationWorkflow/pscbs_all.R
 ADD patches/projectsPanCancer.xml /root/bin/Roddy/dist/resources/configurationFiles/projectsPanCancer.xml
-ADD patches/MAF_plots.r /root/bin/Roddy/dist/plugins/COWorkflows_1.0.114/resources/analysisTools/snvPipeline/MAF_plots.r
-ADD patches/filterVcfForBias.py /root/bin/Roddy/dist/plugins/COWorkflows_1.0.114/resources/analysisTools/snvPipeline/filterVcfForBias.py
-ADD patches/filter_PEoverlap.py /root/bin/Roddy/dist/plugins/COWorkflows_1.0.114/resources/analysisTools/snvPipeline/filter_PEoverlap.py
+
