@@ -49,7 +49,7 @@ if __name__=='__main__':
 	jsonID['cnv'] 	  =  cnv["cnv"] 
 	jsonID['snv_mnv'] =  snv["snv_mnv"]
 	jsonID['indel']   =  indel["indel"]
-	jsonID['gc_bias'] =  gcBias["gc_bias"]
+	jsonID['gc-bias'] =  gcBias["gc-bias"]
 	jsonID = {args.tumorID : jsonID }
 	jsonMain = { "qc_metrics" : jsonID }
 	out.write( json.dumps(jsonMain, indent=2, separators=(",",":")) )

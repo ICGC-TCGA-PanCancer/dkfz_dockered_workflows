@@ -98,3 +98,4 @@ RUN cd /root/bin/Roddy/dist/runtimeDevel && ln -sf groovy* groovy && ln -sf jdk*
 
 ADD patches/projectsPanCancer.xml /root/bin/Roddy/dist/resources/configurationFiles/projectsPanCancer.xml
 
+ADD patches/pscbs_plots_functions.R /root/bin/Roddy/dist/plugins/COWorkflows_1.0.131/resources/analysisTools/copyNumberEstimationWorkflow/psbcs_plots_functions.R
