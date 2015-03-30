@@ -120,6 +120,8 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	export snvTbxGermlineFile=${resultFolder}/${prefixSNV}.germline.snv_mnv.vcf.gz.tbi
 	export snvVCFSomaticFile=${resultFolder}/${prefixSNV}.somatic.snv_mnv.vcf.gz
 	export snvTbxSomaticFile=${resultFolder}/${prefixSNV}.somatic.snv_mnv.vcf.gz.tbi
+	export snvJsonFile=${resultFolder}/${prefixSNV}.snv_mnv.json
+	export snvJsonTabTempFile=${resultFolder}/${prefixSNV}.snv_mnv.json.tab.tmp
 	# Tarball
 	export snvOptFile=${resultFolder}/${prefixSNV}.somatic.snv_mnv.tar.gz
 
@@ -128,6 +130,8 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	export indelTbxGermlineFile=${resultFolder}/${prefixIndel}.germline.indel.vcf.gz.tbi
 	export indelVCFSomaticFile=${resultFolder}/${prefixIndel}.somatic.indel.vcf.gz
 	export indelTbxSomaticFile=${resultFolder}/${prefixIndel}.somatic.indel.vcf.gz.tbi
+	export indelJsonFile=${resultFolder}/${prefixIndel}.indel.json
+	export indelJsonTabTempFile=${resultFolder}/${prefixIndel}.indel.json.tab.tmp
 	# Tarball
 	export indelOptFile=${resultFolder}/${prefixIndel}.somatic.indel.tar.gz
 
@@ -147,11 +151,31 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	tabix -p vcf ${indelVCFSomaticFile}
 
 	export finalCNEFile=`python /root/bin/getFinalCNEFile.py $pid $aceSeqFolder`
+	export finalCNEParameterFile=`python /root/bin/getFinalCNEFile.py  $pid $aceSeqFolder 1`
+
 	cp $finalCNEFile ${aceSeqVCFFile}
 	cp $aceSeqFolder/plots/*.json ${resultFolder}/${prefixACESeq}.cnv.gcbias.json
 
-#	`python /root/bin/convertTabToJson.py -k KEY -f TAB_SEP_FILE -i ${pid}`
+	`python /root/bin/convertTabToJson.py -k cnv -f $finalCNEParameterFile -i ${pid} -o ${resultFolder}/${prefixACESeq}.cnv.json `
+
+	echo "Create SNV json file"
+	SOMSNVPREFILTER=`head -1 ${snvCallingFolder}/*_QC_values.tsv | cut -f 2`
+	SOMSNVFINAL=`zcat ${snvVCFSomaticFile} | grep -v "#" | grep -w PASS | wc -l`
+	SOMSNVALL=`zcat ${snvVCFSomaticFile} | grep -v "#" | wc -l`
+	GERSNVLIKELY=`zcat ${snvVCFGermlineFile} | grep -v "#" | grep -w PASS | wc -l`
 	
+	echo -e "all_somatic\tcaller\tlikely_germline\tpassed_somatic\tsomatic_unfiltered\n${SOMSNVALL}\tmpileup_DKFZ\t${GERSNVLIKELY}\t${SOMSNVFINAL}\t${SOMSNVPREFILTER}" > ${snvJsonTabTempFile}
+	python /root/bin/convertTabToJson.py -k snv_mnv -f ${snvJsonTabTempFile} -i ${pid} -o ${snvJsonFile} && rm ${snvJsonTabTempFile}
+	
+	echo "Create INDEL json file"
+	SOMINDELFINAL=`zcat ${indelVCFSomaticFile} | grep -v "#" | grep -w PASS | wc -l`
+	SOMINDELALL=`zcat ${indelVCFSomaticFile} | grep -v "#" | wc -l`
+	GERINDELLIKELY=`zcat ${indelVCFGermlineFile} | grep -v "#" | grep -w PASS | wc -l`
+	
+	echo -e "all_somatic\tcaller\tlikely_germline\tpassed_somatic\n${SOMINDELALL}\tPlatypus_DKFZ\t${GERINDELLIKELY}\t${SOMINDELFINAL}" > ${indelJsonTabTempFile}
+	python /root/bin/convertTabToJson.py -k indel -f ${indelJsonTabTempFile} -i ${pid} -o ${indelJsonFile} && rm ${indelJsonTabTempFile}
+	
+	python /root/bin/combineJsons.py -c ${resultFolder}/${prefixACESeq}.cnv.json -s ${snvJsonFile} -i ${indelJsonFile} -g ${resultFolder}/${prefixACESeq}.cnv.gcbias.json -o ${resultFolder}/${pid}.qc_metrics.dkfz.json -t ${pid}
 	tabix -p vcf ${aceSeqVCFFile}
 
 	echo "Create tarballs"

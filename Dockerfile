@@ -85,6 +85,10 @@ ADD scripts/convertTabToJson.py /root/bin/convertTabToJson.py
 
 ADD scripts/setupSGE.sh /root/bin/sgeConfig.txt
 
+ADD scripts/combineJsons.py /root/bin/combineJsons.py
+
+ADD scripts/python_modules /root/bin/python_modules
+
 RUN cd /root/bin/Roddy/dist/runtimeDevel && ln -sf groovy* groovy && ln -sf jdk* jdk && ln -sf jdk/jre jre; \
     cd /root/bin/Roddy && cp applicationPropertiesAllLocal.ini applicationProperties.ini; \
     bash /root/sgeResetup.sh; \

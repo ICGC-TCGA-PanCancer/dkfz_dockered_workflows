@@ -6,6 +6,11 @@ import os
 try:	
 		pid = sys.argv[1]
 		path = sys.argv[2]		
+		#check for third parameter given in case the cnv_parameter file should be found
+		if ( len( sys.argv ) >3):
+			parameterFile = sys.argv[3]
+		else:
+			parameterFile = 0
 		ppFile = open('%s/%s_ploidy_purity_2D.txt'% (path, pid) ) 
 		distances = []
 		ploidies = []
@@ -27,5 +32,8 @@ if contin==1:
 		m = min( [ abs( j-2.0 ) for j in ploidies ] )
 		index = [i for i,j in enumerate(ploidies) if abs(j-2.0)==m ]
 
-		print "%s/%s.%s_%s.cnv.vcf.gz"% ( path, pid, entries[index[0]][1], entries[index[0]][2] )
+		if parameterFile != "1":
+			print "%s/%s.%s_%s.cnv.vcf.gz"% ( path, pid, entries[index[0]][1], entries[index[0]][2] )
+		else:
+			print "%s/%s_cnv_parameter_%s_%s.txt"% ( path, pid, entries[index[0]][1], entries[index[0]][2] )
 
