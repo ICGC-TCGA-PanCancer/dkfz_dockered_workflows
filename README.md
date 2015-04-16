@@ -9,14 +9,14 @@ You need to download two controlled access bundles in order to build
 Contains a dockerfile and several helper scripts to build and run the DKFZ workflows.
 
 The Roddy binary is located in GNOS:
-https://gtrepo-dkfz.annailabs.com/cghub/data/analysis/download/7a4d2176-3a73-400d-8b58-3fed0b53798d/
+https://gtrepo-dkfz.annailabs.com/cghub/data/analysis/download/c8101044-89bf-445a-892e-1f3ae8c7cc98
 
 The DKFZ dependency bundle is also located in GNOS:
 https://gtrepo-dkfz.annailabs.com/cghub/data/analysis/download/32749c9f-d8aa-4ff5-b32c-296976aec706
 
 You can download them using:
 
-    gtdownload -vv -c gnos.pem https://gtrepo-dkfz.annailabs.com/cghub/data/analysis/download/7a4d2176-3a73-400d-8b58-3fed0b53798d
+    gtdownload -vv -c gnos.pem https://gtrepo-dkfz.annailabs.com/cghub/data/analysis/download/c8101044-89bf-445a-892e-1f3ae8c7cc98
     gtdownload -vv -c gnos.pem https://gtrepo-dkfz.annailabs.com/cghub/data/analysis/download/32749c9f-d8aa-4ff5-b32c-296976aec706
 
 ## Building
