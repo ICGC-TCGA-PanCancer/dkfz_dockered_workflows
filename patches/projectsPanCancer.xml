@@ -11,7 +11,7 @@
         <cvalue name='analysisMethodNameForOutDir' value='exome' type='string'/>
         <cvalue name='inputBaseDirectory' value='/mnt/datastore/testdata' type='path'/>
         <cvalue name='outputBaseDirectory' value='/mnt/datastore/testdata' type='path'/>
-	<cvalue name='outputFileGroup' value='root'/>
+	<cvalue name='outputFileGroup' value='roddy'/>
         
         <cvalue name='outputAnalysisBaseDirectory' value='${outputBaseDirectory}/${pid}' type='path'/>
 

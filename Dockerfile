@@ -34,6 +34,8 @@ RUN export DEBIAN_FRONTEND=noninteractive; \
     /etc/init.d/gridengine-exec stop; \
     /etc/init.d/gridengine-master restart; \
     /etc/init.d/gridengine-exec start;
+
+RUN useradd roddy -d /roddy
     
 #RUN	
 RUN	echo `head -n 1 /etc/hosts | cut -f 1` master > /tmp/hostsTmp && tail -n +2 /etc/hosts >> /tmp/hostsTmp && cp /tmp/hostsTmp /etc/hosts && echo master > /etc/hostname; \
@@ -42,11 +44,11 @@ RUN	echo `head -n 1 /etc/hosts | cut -f 1` master > /tmp/hostsTmp && tail -n +2 
     /etc/init.d/gridengine-exec stop; \
     /etc/init.d/gridengine-master restart; \
     /etc/init.d/gridengine-exec start; \
-    qconf -am root; \
-    qconf -au root users; \
+    qconf -am roddy; \
+    qconf -au roddy users; \
     qconf -as $HOST
 
-ADD scripts/sgeInit.sh /root/sgeInit.sh
+ADD scripts/sgeInit.sh /roddy/sgeInit.sh
 
 RUN echo `head -n 1 /etc/hosts | cut -f 1` master > /tmp/hostsTmp; \
 	tail -n +2 /etc/hosts >> /tmp/hostsTmp; \
@@ -55,11 +57,11 @@ RUN echo `head -n 1 /etc/hosts | cut -f 1` master > /tmp/hostsTmp; \
 	cat /etc/hosts; \
 	hostName=`hostname`; \
     export HOST=$hostName; \
-    cd ~; chmod 777 sgeInit.sh; \
+    cd /roddy; chmod 777 sgeInit.sh; \
 	bash sgeInit.sh; \
 	rm sgeInit.sh;
 
-RUN mkdir /root/bin
+RUN mkdir /roddy/bin
 
 RUN apt-get update; easy_install Atlas; apt-get -y install libatlas-base-dev gfortran;
 
@@ -71,33 +73,39 @@ RUN easy_install -U 'distribute'; \
     pip install pysam==0.6; \
     easy_install matplotlib==1.0.1;
 
-ADD scripts/sgeResetup.sh /root/sgeResetup.sh
+ADD scripts/sgeResetup.sh /roddy/sgeResetup.sh
 
-ADD Roddy /root/bin/Roddy
+ADD Roddy /roddy/bin/Roddy
 
-#ADD RoddyWorkflows /root/bin/RoddyWorkflows
+#ADD RoddyWorkflows /roddy/bin/RoddyWorkflows
 
-ADD runwrapper.sh /root/bin/runwrapper.sh
+ADD runwrapper.sh /roddy/bin/runwrapper.sh
 
-ADD scripts/getFinalCNEFile.py /root/bin/getFinalCNEFile.py
+ADD scripts/getFinalCNEFile.py /roddy/bin/getFinalCNEFile.py
 
-ADD scripts/convertTabToJson.py /root/bin/convertTabToJson.py
+ADD scripts/convertTabToJson.py /roddy/bin/convertTabToJson.py
 
-ADD scripts/setupSGE.sh /root/bin/sgeConfig.txt
+ADD scripts/setupSGE.sh /roddy/bin/sgeConfig.txt
 
-ADD scripts/combineJsons.py /root/bin/combineJsons.py
+ADD scripts/combineJsons.py /roddy/bin/combineJsons.py
 
-ADD scripts/python_modules /root/bin/python_modules
+ADD scripts/python_modules /roddy/bin/python_modules
 
-RUN cd /root/bin/Roddy/dist/runtimeDevel && ln -sf groovy* groovy && ln -sf jdk* jdk && ln -sf jdk/jre jre; \
-    cd /root/bin/Roddy && cp applicationPropertiesAllLocal.ini applicationProperties.ini; \
-    bash /root/sgeResetup.sh; \
-    qconf -Mc /root/bin/sgeConfig.txt; \
+RUN cd /roddy/bin/Roddy/dist/runtimeDevel && ln -sf groovy* groovy && ln -sf jdk* jdk && ln -sf jdk/jre jre; \
+    cd /roddy/bin/Roddy && cp applicationPropertiesAllLocal.ini applicationProperties.ini; \
+    bash /roddy/sgeResetup.sh; \
+    qconf -Mc /roddy/bin/sgeConfig.txt; \
     mkdir -p /mnt/datastore/workflow_data; \
-    mkdir /root/logs;
+    mkdir /roddy/logs;
 
-ADD patches/projectsPanCancer.xml /root/bin/Roddy/dist/resources/configurationFiles/projectsPanCancer.xml
+ADD patches/projectsPanCancer.xml /roddy/bin/Roddy/dist/resources/configurationFiles/projectsPanCancer.xml
 
-ADD patches/pscbs_plots_functions.R /root/bin/Roddy/dist/plugins/COWorkflows_1.0.131/resources/analysisTools/copyNumberEstimationWorkflow/psbcs_plots_functions.R
+ADD patches/pscbs_plots_functions.R /roddy/bin/Roddy/dist/plugins/COWorkflows_1.0.131/resources/analysisTools/copyNumberEstimationWorkflow/psbcs_plots_functions.R
 
-ADD patches/filterVcfForBias.py /root/bin/Roddy/dist/plugins/COWorkflows_1.0.131/resources/analysisTools/snvPipeline/filterVcfForBias.py
+ADD patches/filterVcfForBias.py /roddy/bin/Roddy/dist/plugins/COWorkflows_1.0.131/resources/analysisTools/snvPipeline/filterVcfForBias.py
+
+RUN chown -R roddy:roddy /tmp/*
+
+RUN adduser roddy sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+USER roddy
