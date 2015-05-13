@@ -105,6 +105,7 @@ ADD patches/pscbs_plots_functions.R /roddy/bin/Roddy/dist/plugins/COWorkflows_1.
 ADD patches/filterVcfForBias.py /roddy/bin/Roddy/dist/plugins/COWorkflows_1.0.131/resources/analysisTools/snvPipeline/filterVcfForBias.py
 
 RUN chown -R roddy:roddy /tmp/*
+RUN chown -R roddy:roddy /roddy
 
 RUN adduser roddy sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
