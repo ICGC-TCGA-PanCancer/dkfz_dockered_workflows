@@ -1,6 +1,6 @@
 #!/bin/bash
 
-bash ~/sgeResetup.sh
+sudo bash ~/sgeResetup.sh
 
 CONFIG_FILE=/mnt/datastore/workflow_data/workflow.ini
 
@@ -23,7 +23,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	export aceSeqFolder=$pidPath/ACEseq
 	export indelCallingFolder=$pidPath/platypus_indel
 	export dellyFolder=$pidPath/delly
-	export JAVA_HOME=/root/bin/Roddy/dist/runtimeDevel/jre
+	export JAVA_HOME=/roddy/bin/Roddy/dist/runtimeDevel/jre
 
 	mkdir -p $alignmentFolder $dellyFolder
 
@@ -42,12 +42,12 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	cd ~/bin/Roddy
 
-	export aceseqlog=/root/logs/aceseq_$pid.log
-	export aceseqrc=/root/logs/aceseq_$pid.rc
-	export snvlog=/root/logs/snv_$pid.log
-	export snvrc=/root/logs/snv_$pid.rc
-	export indellog=/root/logs/indel_$pid.log
-	export indelrc=/root/logs/indel_$pid.rc
+	export aceseqlog=/roddy/logs/aceseq_$pid.log
+	export aceseqrc=/roddy/logs/aceseq_$pid.rc
+	export snvlog=/roddy/logs/snv_$pid.log
+	export snvrc=/roddy/logs/snv_$pid.rc
+	export indellog=/roddy/logs/indel_$pid.log
+	export indelrc=/roddy/logs/indel_$pid.rc
 
 	export runACESeq=${runACESeq-true}
 	export runIndel=${runIndel-true}
@@ -104,11 +104,11 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	export resultLogFolder=/mnt/datastore/resultdata/${pid}_logs
 	export resultFilesFolder=/mnt/datastore/resultdata/data
 	cp -r $pidPath/roddyExecutionStore $resultLogFolder
-	cp /root/logs/*$pid* $resultLogFolder
+	cp /roddy/logs/*$pid* $resultLogFolder
 
-	export roddyVersionString=`grep useRoddyVersion /root/bin/Roddy/applicationPropertiesAllLocal.ini`
-	export pluginVersionString=`grep usePluginVersion /root/bin/Roddy/applicationPropertiesAllLocal.ini`
-	export workflowVersion=`/root/bin/Roddy/dist/runtimeDevel/groovy/bin/groovy -e 'println args[0].split("[=]")[1].split("[,]").find { it.contains("COWorkflows") }.split("[:]")[1].replace(".", "-")' $pluginVersionString`
+	export roddyVersionString=`grep useRoddyVersion /roddy/bin/Roddy/applicationPropertiesAllLocal.ini`
+	export pluginVersionString=`grep usePluginVersion /roddy/bin/Roddy/applicationPropertiesAllLocal.ini`
+	export workflowVersion=`/roddy/bin/Roddy/dist/runtimeDevel/groovy/bin/groovy -e 'println args[0].split("[=]")[1].split("[,]").find { it.contains("COWorkflows") }.split("[:]")[1].replace(".", "-")' $pluginVersionString`
 	# Copy the result files
 	#cp -r $pidPath ${pidPath}_final
 	export prefixSNV=${pid}.dkfz-snvCalling_${workflowVersion}.${date}
@@ -150,13 +150,13 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	tabix -p vcf ${indelVCFGermlineFile}
 	tabix -p vcf ${indelVCFSomaticFile}
 
-	export finalCNEFile=`python /root/bin/getFinalCNEFile.py $pid $aceSeqFolder`
-	export finalCNEParameterFile=`python /root/bin/getFinalCNEFile.py  $pid $aceSeqFolder 1`
+	export finalCNEFile=`python /roddy/bin/getFinalCNEFile.py $pid $aceSeqFolder`
+	export finalCNEParameterFile=`python /roddy/bin/getFinalCNEFile.py  $pid $aceSeqFolder 1`
 
 	cp $finalCNEFile ${aceSeqVCFFile}
 	cp $aceSeqFolder/plots/*.json ${resultFolder}/${prefixACESeq}.cnv.gcbias.json
 
-	`python /root/bin/convertTabToJson.py -k cnv -f $finalCNEParameterFile -i ${pid} -o ${resultFolder}/${prefixACESeq}.cnv.json `
+	`python /roddy/bin/convertTabToJson.py -k cnv -f $finalCNEParameterFile -i ${pid} -o ${resultFolder}/${prefixACESeq}.cnv.json `
 
 	echo "Create SNV json file"
 	SOMSNVPREFILTER=`head -1 ${snvCallingFolder}/*_QC_values.tsv | cut -f 2`
@@ -165,7 +165,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	GERSNVLIKELY=`zcat ${snvVCFGermlineFile} | grep -v "#" | grep -w PASS | wc -l`
 	
 	echo -e "all_somatic\tcaller\tlikely_germline\tpassed_somatic\tsomatic_unfiltered\n${SOMSNVALL}\tmpileup_DKFZ\t${GERSNVLIKELY}\t${SOMSNVFINAL}\t${SOMSNVPREFILTER}" > ${snvJsonTabTempFile}
-	python /root/bin/convertTabToJson.py -k snv_mnv -f ${snvJsonTabTempFile} -i ${pid} -o ${snvJsonFile} && rm ${snvJsonTabTempFile}
+	python /roddy/bin/convertTabToJson.py -k snv_mnv -f ${snvJsonTabTempFile} -i ${pid} -o ${snvJsonFile} && rm ${snvJsonTabTempFile}
 	
 	echo "Create INDEL json file"
 	SOMINDELFINAL=`zcat ${indelVCFSomaticFile} | grep -v "#" | grep -w PASS | wc -l`
@@ -173,9 +173,9 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	GERINDELLIKELY=`zcat ${indelVCFGermlineFile} | grep -v "#" | grep -w PASS | wc -l`
 	
 	echo -e "all_somatic\tcaller\tlikely_germline\tpassed_somatic\n${SOMINDELALL}\tPlatypus_DKFZ\t${GERINDELLIKELY}\t${SOMINDELFINAL}" > ${indelJsonTabTempFile}
-	python /root/bin/convertTabToJson.py -k indel -f ${indelJsonTabTempFile} -i ${pid} -o ${indelJsonFile} && rm ${indelJsonTabTempFile}
+	python /roddy/bin/convertTabToJson.py -k indel -f ${indelJsonTabTempFile} -i ${pid} -o ${indelJsonFile} && rm ${indelJsonTabTempFile}
 	
-	python /root/bin/combineJsons.py -c ${resultFolder}/${prefixACESeq}.cnv.json -s ${snvJsonFile} -i ${indelJsonFile} -g ${resultFolder}/${prefixACESeq}.cnv.gcbias.json -o ${resultFolder}/${pid}.qc_metrics.dkfz.json -t ${pid}
+	python /roddy/bin/combineJsons.py -c ${resultFolder}/${prefixACESeq}.cnv.json -s ${snvJsonFile} -i ${indelJsonFile} -g ${resultFolder}/${prefixACESeq}.cnv.gcbias.json -o ${resultFolder}/${pid}.qc_metrics.dkfz.json -t ${pid}
 	tabix -p vcf ${aceSeqVCFFile}
 
 	echo "Create tarballs"
