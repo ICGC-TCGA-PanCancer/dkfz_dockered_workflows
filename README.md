@@ -14,6 +14,8 @@ https://gtrepo-dkfz.annailabs.com/cghub/data/analysis/download/971daec1-e346-4c0
 The DKFZ dependency bundle is also located in GNOS:
 https://gtrepo-dkfz.annailabs.com/cghub/data/analysis/download/32749c9f-d8aa-4ff5-b32c-296976aec706
 
+**NOTE:** If you intend to run this container on its own, the above file is necessary. If you are running this container as a part of [DEWrapperWorkflow](https://github.com/ICGC-TCGA-PanCancer/DEWrapperWorkflow), you will not need to download it here: these dependencies will be downloaded by DEWrapperWorkflow.
+
 There are two files that need to be modified in the Roddy binary. applicationPropertiesAllLocal.ini and applicationProperties.ini both specify the root user. They need to be changed to the roddy user to run roddy not as the root user. 
 
 You can download them using:
