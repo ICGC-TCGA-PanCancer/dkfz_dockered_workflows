@@ -108,12 +108,15 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	export roddyVersionString=`grep useRoddyVersion /roddy/bin/Roddy/applicationPropertiesAllLocal.ini`
 	export pluginVersionString=`grep usePluginVersion /roddy/bin/Roddy/applicationPropertiesAllLocal.ini`
-	export workflowVersion=`/roddy/bin/Roddy/dist/runtimeDevel/groovy/bin/groovy -e 'println args[0].split("[=]")[1].split("[,]").find { it.contains("COWorkflows") }.split("[:]")[1].replace(".", "-")' $pluginVersionString`
+#	export workflowVersion=`/roddy/bin/Roddy/dist/runtimeDevel/groovy/bin/groovy -e 'println args[0].split("[=]")[1].split("[,]").find { it.contains("COWorkflows") }.split("[:]")[1].replace(".", "-")' $pluginVersionString`
+	workflowVersionIndel=1-0-132-1
+	workflowVersionSNV=1-0-132-1
+	workflowVersionCNE=1-0-189
 	# Copy the result files
 	#cp -r $pidPath ${pidPath}_final
-	export prefixSNV=${pid}.dkfz-snvCalling_${workflowVersion}.${date}
-	export prefixIndel=${pid}.dkfz-indelCalling_${workflowVersion}.${date}
-	export prefixACESeq=${pid}.dkfz-copyNumberEstimation_${workflowVersion}.${date}
+	export prefixSNV=${pid}.dkfz-snvCalling_${workflowVersionSNV}.${date}
+	export prefixIndel=${pid}.dkfz-indelCalling_${workflowVersionIndel}.${date}
+	export prefixACESeq=${pid}.dkfz-copyNumberEstimation_${workflowVersionCNE}.${date}
 
 	# Separated output files
 	export snvVCFGermlineFile=${resultFolder}/${prefixSNV}.germline.snv_mnv.vcf.gz
