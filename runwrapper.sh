@@ -84,7 +84,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	failed=false
 	for i in ${jobstateFiles[@]}
 	do
-		cntStarted=`cat $i | grep -v null: | grep ":57427:" | wc -l`
+		cntStarted=`cat $i | grep -v null: | grep ":STARTED:" | wc -l`
 		cntSuccessful=`cat $i | grep -v null: | grep ":0:"| wc -l`
 		cntErrornous=`expr $cntStarted - $cntSuccessful`
 		[[ $cntErrornous -gt 0 ]] && failed=true && echo "Errors found for jobs in $i"
