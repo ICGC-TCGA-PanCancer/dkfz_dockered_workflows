@@ -10,11 +10,6 @@ CONFIG_FILE=/mnt/datastore/workflow_data/workflow.ini
 source ${CONFIG_FILE}
 
 for (( i=0; i<${#tumorBams[@]}; i++ )); do
-	echo $i
-done
-
-
-exit 0
 	# Relink files
 
 	export tumorbam=${tumorBams[$i]}
