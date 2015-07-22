@@ -10,7 +10,11 @@ CONFIG_FILE=/mnt/datastore/workflow_data/workflow.ini
 source ${CONFIG_FILE}
 
 for (( i=0; i<${#tumorBams[@]}; i++ )); do
+	echo $i
+done
 
+
+exit 0
 	# Relink files
 
 	export tumorbam=${tumorBams[$i]}
@@ -82,13 +86,13 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	# Only take the last directory of every workflow.
 	jobstateFiles=( `ls -d $pidPath/r*/*copy*/job* | tail -n 1` `ls -d $pidPath/r*/*snv*/job* | tail -n 1` `ls -d $pidPath/r*/*indel*/job* | tail -n 1` )
 	failed=false
-	for i in ${jobstateFiles[@]}
+	for logfile in ${jobstateFiles[@]}
 	do
-		cntStarted=`cat $i | grep -v null: | grep ":STARTED:" | wc -l`
-		cntSuccessful=`cat $i | grep -v null: | grep ":0:"| wc -l`
+		cntStarted=`cat $logfile | grep -v null: | grep ":STARTED:" | wc -l`
+		cntSuccessful=`cat $logfile | grep -v null: | grep ":0:"| wc -l`
 		cntErrornous=`expr $cntStarted - $cntSuccessful`
-		[[ $cntErrornous -gt 0 ]] && failed=true && echo "Errors found for jobs in $i"
-		[[ $cntErrornous == 0 ]] && echo "No errors found for $i"
+		[[ $cntErrornous -gt 0 ]] && failed=true && echo "Errors found for jobs in $logfile"
+		[[ $cntErrornous == 0 ]] && echo "No errors found for $logfile"
 	done
 	
 	[[ $failed == true ]] && echo "There was at least one error in a job status logfile. Will exit now!" && exit 5
