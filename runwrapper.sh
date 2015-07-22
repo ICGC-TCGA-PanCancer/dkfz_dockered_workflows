@@ -191,10 +191,10 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	wait
 
 	echo "Calculating md5 sums"
-	for i in `ls $resultFolder/$pid.dkfz*.tbi $resultFolder/$pid.dkfz*.gz`
+	for resultfile in `ls $resultFolder/$pid.dkfz*.tbi $resultFolder/$pid.dkfz*.gz`
 	do
 		echo "call md5sum for $i"
-		cat $i | md5sum | cut -b 1-33 > ${i}.md5
+		cat $resultfile | md5sum | cut -b 1-33 > ${resultfile}.md5
 	done
 
 	echo "Setup proper access rights"
