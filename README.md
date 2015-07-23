@@ -28,6 +28,6 @@ It can be downloaded like this:
 
 ## Building
 
-Once you have the above `Roddy` directory moved to the `docker/dkfz_dockered_workflows` directory you can build the Docker image.  The data bundle is actually pulled into this container at runtime.
+Once you have the above `Roddy` directory moved to the `docker/dkfz_dockered_workflows` directory you can build the Docker image.  The data bundle is actually pulled into this container at runtime. The tag `1.3` below depends on the current release of this repo.
 
-    docker build -t pancancer/dkfz_dockered_workflows . 
+    docker build -t pancancer/dkfz_dockered_workflows:1.3 . 

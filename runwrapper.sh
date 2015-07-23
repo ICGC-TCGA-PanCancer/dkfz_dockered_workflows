@@ -10,7 +10,6 @@ CONFIG_FILE=/mnt/datastore/workflow_data/workflow.ini
 source ${CONFIG_FILE}
 
 for (( i=0; i<${#tumorBams[@]}; i++ )); do
-
 	# Relink files
 
 	export tumorbam=${tumorBams[$i]}
@@ -82,13 +81,13 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	# Only take the last directory of every workflow.
 	jobstateFiles=( `ls -d $pidPath/r*/*copy*/job* | tail -n 1` `ls -d $pidPath/r*/*snv*/job* | tail -n 1` `ls -d $pidPath/r*/*indel*/job* | tail -n 1` )
 	failed=false
-	for i in ${jobstateFiles[@]}
+	for logfile in ${jobstateFiles[@]}
 	do
-		cntStarted=`cat $i | grep -v null: | grep ":57427:" | wc -l`
-		cntSuccessful=`cat $i | grep -v null: | grep ":0:"| wc -l`
+		cntStarted=`cat $logfile | grep -v null: | grep ":STARTED:" | wc -l`
+		cntSuccessful=`cat $logfile | grep -v null: | grep ":0:"| wc -l`
 		cntErrornous=`expr $cntStarted - $cntSuccessful`
-		[[ $cntErrornous -gt 0 ]] && failed=true && echo "Errors found for jobs in $i"
-		[[ $cntErrornous == 0 ]] && echo "No errors found for $i"
+		[[ $cntErrornous -gt 0 ]] && failed=true && echo "Errors found for jobs in $logfile"
+		[[ $cntErrornous == 0 ]] && echo "No errors found for $logfile"
 	done
 	
 	[[ $failed == true ]] && echo "There was at least one error in a job status logfile. Will exit now!" && exit 5
@@ -108,12 +107,15 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	export roddyVersionString=`grep useRoddyVersion /roddy/bin/Roddy/applicationPropertiesAllLocal.ini`
 	export pluginVersionString=`grep usePluginVersion /roddy/bin/Roddy/applicationPropertiesAllLocal.ini`
-	export workflowVersion=`/roddy/bin/Roddy/dist/runtimeDevel/groovy/bin/groovy -e 'println args[0].split("[=]")[1].split("[,]").find { it.contains("COWorkflows") }.split("[:]")[1].replace(".", "-")' $pluginVersionString`
+#	export workflowVersion=`/roddy/bin/Roddy/dist/runtimeDevel/groovy/bin/groovy -e 'println args[0].split("[=]")[1].split("[,]").find { it.contains("COWorkflows") }.split("[:]")[1].replace(".", "-")' $pluginVersionString`
+	workflowVersionIndel=1-0-132-1
+	workflowVersionSNV=1-0-132-1
+	workflowVersionCNE=1-0-189
 	# Copy the result files
 	#cp -r $pidPath ${pidPath}_final
-	export prefixSNV=${pid}.dkfz-snvCalling_${workflowVersion}.${date}
-	export prefixIndel=${pid}.dkfz-indelCalling_${workflowVersion}.${date}
-	export prefixACESeq=${pid}.dkfz-copyNumberEstimation_${workflowVersion}.${date}
+	export prefixSNV=${pid}.dkfz-snvCalling_${workflowVersionSNV}.${date}
+	export prefixIndel=${pid}.dkfz-indelCalling_${workflowVersionIndel}.${date}
+	export prefixACESeq=${pid}.dkfz-copyNumberEstimation_${workflowVersionCNE}.${date}
 
 	# Separated output files
 	export snvVCFGermlineFile=${resultFolder}/${prefixSNV}.germline.snv_mnv.vcf.gz
@@ -189,10 +191,10 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	wait
 
 	echo "Calculating md5 sums"
-	for i in `ls $resultFolder/$pid.dkfz*.tbi $resultFolder/$pid.dkfz*.gz`
+	for resultfile in `ls $resultFolder/$pid.dkfz*.tbi $resultFolder/$pid.dkfz*.gz`
 	do
 		echo "call md5sum for $i"
-		cat $i | md5sum | cut -b 1-33 > ${i}.md5
+		cat $resultfile | md5sum | cut -b 1-33 > ${resultfile}.md5
 	done
 
 	echo "Setup proper access rights"
