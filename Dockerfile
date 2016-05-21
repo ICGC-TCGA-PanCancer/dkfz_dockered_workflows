@@ -81,6 +81,8 @@ ADD Roddy /roddy/bin/Roddy
 
 ADD runwrapper.sh /roddy/bin/runwrapper.sh
 
+ADD scripts/run_workflow.pl /roddy/bin/run_workflow.pl
+
 ADD scripts/getFinalCNEFile.py /roddy/bin/getFinalCNEFile.py
 
 ADD scripts/convertTabToJson.py /roddy/bin/convertTabToJson.py
