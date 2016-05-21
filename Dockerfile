@@ -108,6 +108,7 @@ ADD patches/analysisCopyNumberEstimation.xml /roddy/bin/Roddy/dist/plugins/CopyN
 
 RUN chown -R roddy:roddy /tmp/*
 RUN chown -R roddy:roddy /roddy
+RUN chmod -R 777 /data/datastore /roddy/bin /mnt/datastore /roddy/logs
 
 RUN adduser roddy sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
