@@ -111,4 +111,12 @@ RUN chown -R roddy:roddy /roddy
 
 RUN adduser roddy sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
 USER roddy
+
+VOLUME /data/datastore/
+VOLUME /roddy/bin
+VOLUME /mnt/datastore/workflow_data
+VOLUME /roddy/logs
+
+CMD ["/bin/bash"]
