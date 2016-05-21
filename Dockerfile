@@ -1,7 +1,7 @@
 FROM ubuntu:precise 
 MAINTAINER Michael Heinold @ DKFZ
 
-#ENV HOSTNAME master
+ENV HOSTNAME master
 
 RUN echo '127.0.0.1 master' | cat - /etc/hosts > /tmp/tmp_host && cp /tmp/tmp_host /etc/hosts
 
