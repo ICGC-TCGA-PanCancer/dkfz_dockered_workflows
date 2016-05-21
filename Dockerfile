@@ -114,6 +114,7 @@ RUN chmod -R 777 /data/datastore /roddy/bin /mnt/datastore /roddy/logs
 
 RUN adduser roddy sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN echo '127.0.0.1  master' >> /etc/hosts
 
 USER roddy
 

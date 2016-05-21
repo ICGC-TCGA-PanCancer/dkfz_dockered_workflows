@@ -43,7 +43,7 @@ run("ln -s $bedpe /data/datastore/delly/delly.bedpe.txt");
 run("mkdir -p /mnt/datastore/workflow_data/");
 run("mkdir -p $cwd/reference");
 run("cd $cwd/reference && tar zxf $reference");
-run("mkdir -p /mnt/datastore/ && ln -s $cwd/reference/bundledFiles /mnt/datastore/")
+run("mkdir -p /mnt/datastore/ && ln -s $cwd/reference/bundledFiles /mnt/datastore/");
 
 # MAKE CONFIG
 # the default config is the workflow_local.ini and has most configs ready to go
