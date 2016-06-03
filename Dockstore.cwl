@@ -57,11 +57,6 @@ inputs:
     inputBinding:
       position: 4
       prefix: "--reference-gz"
-  - id: "#reference-gc"
-    type: File
-    inputBinding:
-      position: 5
-      prefix: "--reference-gc"
 
 outputs:
   - id: "#somatic_sv_vcf"

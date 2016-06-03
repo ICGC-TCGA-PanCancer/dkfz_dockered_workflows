@@ -23,7 +23,7 @@ GetOptions (
   "normal-bam=s" => \$normal_bam,
   "tumor-bam=s" => \$tumor_bam,
   "delly-bedpe=s" => \$bedpe,
-  "reference=s" => \$reference,
+  "reference-gz=s" => \$reference,
 )
 # TODO: need to add all the new params, then symlink the ref files to the right place
  or die("Error in command line arguments\n");
@@ -41,8 +41,8 @@ run("ln -s $tumor_bam /data/datastore/tumor/");
 run("samtools index /data/datastore/tumor/tumor.bam");
 run("ln -s $bedpe /data/datastore/delly/delly.bedpe.txt");
 run("mkdir -p /mnt/datastore/workflow_data/");
-run("mkdir -p $cwd/reference");
-run("cd $cwd/reference && tar zxf $reference");
+run("mkdir -p \$TMPDIR/reference");
+run("cd \$TMPDIR/reference && tar zxf $reference");
 run("mkdir -p /mnt/datastore/ && ln -s $cwd/reference/bundledFiles /mnt/datastore/");
 
 # MAKE CONFIG
@@ -66,16 +66,11 @@ close OUT;
 # NOW RUN WORKFLOW
 my $error = system("/bin/bash -c '/roddy/bin/runwrapper.sh'");
 
-# NOW FIND OUTPUT
-#my $path = `ls -1t /datastore/ | grep 'oozie-' | head -1`;
-#chomp $path;
-
 # MOVE THESE TO THE RIGHT PLACE
-#system("mv /datastore/$path/*.vcf.gz /datastore/$path/*.bedpe.txt /datastore/$path/delly_results/*.sv.cov.tar.gz /datastore/$path/delly_results/*.sv.cov.plots.tar.gz /datastore/$path/*.sv.log.tar.gz /datastore/$path/*.json $cwd");
+system("mv /mnt/datastore/resultdata/* $cwd");
 
 # RETURN RESULT
-#exit($error);
-exit(0);
+exit($error);
 
 sub run {
   my $cmd = shift;
