@@ -12,12 +12,7 @@
   },
   "reference-gz":
   {
-    "path": "http://s3.amazonaws.com/pan-cancer-data/pan-cancer-reference/genome.fa.gz",
-    "class": "File"
-  },
-  "reference-gc":
-  {
-    "path": "https://s3.amazonaws.com/pan-cancer-data/pan-cancer-reference/hs37d5_1000GP.gc",
+    "path": "/mnt/dkfz_files/32749c9f-d8aa-4ff5-b32c-296976aec706/dkfz-workflow-dependencies_150318_0951.tar.gz",
     "class": "File"
   },
   "somatic_sv_vcf":
