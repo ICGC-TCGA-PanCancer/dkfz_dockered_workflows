@@ -96,4 +96,4 @@ outputs:
     outputBinding:
       glob: "*.sv.qc.json"
 
-baseCommand: ["perl", "/usr/bin/run_seqware_workflow.pl"]
+baseCommand: ["perl", "/roddy/bin/run_workflow.pl"]
