@@ -120,10 +120,11 @@ RUN apt-get update && apt-get -y install samtools
 
 USER roddy
 
-VOLUME /data/datastore/
-VOLUME /roddy/bin
+VOLUME /data/datastore
+VOLUME /roddy
+#VOLUME /roddy/bin
 VOLUME /mnt/datastore
-VOLUME /roddy/logs
+#VOLUME /roddy/logs
 VOLUME /var/run/gridengine
 
 CMD ["/bin/bash"]
