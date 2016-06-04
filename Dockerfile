@@ -116,9 +116,9 @@ RUN adduser roddy sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 RUN echo '127.0.0.1  master' >> /etc/hosts
 
-USER roddy
-
 RUN apt-get update && apt-get -y install samtools
+
+USER roddy
 
 VOLUME /data/datastore/
 VOLUME /roddy/bin
