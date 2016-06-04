@@ -35,15 +35,15 @@ system("sudo chmod a+rwx /tmp");
 run("mkdir -p /data/datastore/normal");
 run("mkdir -p /data/datastore/tumor/");
 run("mkdir -p /data/datastore/delly/");
-run("ln -s $normal_bam /data/datastore/normal/");
+run("ln -s $normal_bam /data/datastore/normal/normal.bam");
 run("samtools index /data/datastore/normal/normal.bam");
-run("ln -s $tumor_bam /data/datastore/tumor/");
+run("ln -s $tumor_bam /data/datastore/tumor/tumor.bam");
 run("samtools index /data/datastore/tumor/tumor.bam");
 run("ln -s $bedpe /data/datastore/delly/delly.bedpe.txt");
 run("mkdir -p /mnt/datastore/workflow_data/");
 run("mkdir -p \$TMPDIR/reference");
 run("cd \$TMPDIR/reference && tar zxf $reference");
-run("mkdir -p /mnt/datastore/ && ln -s $cwd/reference/bundledFiles /mnt/datastore/");
+run("mkdir -p /mnt/datastore/ && ln -s \$TMPDIR/reference/bundledFiles /mnt/datastore/");
 
 # MAKE CONFIG
 # the default config is the workflow_local.ini and has most configs ready to go
@@ -74,6 +74,7 @@ exit($error);
 
 sub run {
   my $cmd = shift;
+  print "RUNNING CMD: $cmd\n";
   my $error = system($cmd);
   if ($error) { exit($error); }
 }
