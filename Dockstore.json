@@ -15,6 +15,11 @@
     "path": "/mnt/dkfz_files/32749c9f-d8aa-4ff5-b32c-296976aec706/dkfz-workflow-dependencies_150318_0951.tar.gz",
     "class": "File"
   },
+  "delly-bedpe":
+  {
+    "path":"/mnt/test_data_delly_output/datastore/launcher-4bbba8cf-06be-47f6-8eed-315ca47e2954/outputs/run_id.embl-delly_1-3-0-preFilter.20150318.somatic.sv.bedpe.txt",
+    "class":"File"
+  },
   "somatic_sv_vcf":
   {
     "path":"/mnt/test_data_delly_output/delly.somatic.sv.vcf.gz",
