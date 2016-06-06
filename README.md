@@ -11,7 +11,9 @@ Contains a dockerfile and several helper scripts to build and run the DKFZ workf
 The Roddy binary is located in GNOS:
 https://gtrepo-dkfz.annailabs.com/cghub/data/analysis/download/971daec1-e346-4c0f-bd80-f6d1feb69968
 
-There are two files that need to be modified in the Roddy binary. applicationPropertiesAllLocal.ini and applicationProperties.ini both specify the root user. They need to be changed to the roddy user to run roddy not as the root user. 
+There are two files that need to be modified in the Roddy binary. applicationPropertiesAllLocal.ini and applicationProperties.ini both specify the root user. They need to be changed to the user 'roddy' rather than 'root'.  For example, change into the extracted Roddy folder and run:
+
+    perl -pi.orig -e 's/(CLI\.executionServiceUser=)root/${1}roddy/;' *.ini
 
 You can download them using:
 
@@ -30,4 +32,4 @@ It can be downloaded like this:
 
 Once you have the above `Roddy` directory moved to the `docker/dkfz_dockered_workflows` directory you can build the Docker image.  The data bundle is actually pulled into this container at runtime. The tag `1.3` below depends on the current release of this repo.
 
-    docker build -t pancancer/dkfz_dockered_workflows:1.3 . 
+    docker build -t quay.io/pancancer/pcawg-dkfz-workflow:2.0.0 .

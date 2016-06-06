@@ -75,11 +75,17 @@ RUN easy_install -U 'distribute'; \
 
 ADD scripts/sgeResetup.sh /roddy/sgeResetup.sh
 
-ADD Roddy /roddy/bin/Roddy
+#ADD Roddy /roddy/bin/Roddy
+# now getting Roddy binary from a public URL since authors indicated this is fine
+RUN wget https://s3.amazonaws.com/pan-cancer-data/workflow-data/DKFZPancancer/Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
+    tar zxf Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
+    mv Roddy /roddy/bin/
 
 #ADD RoddyWorkflows /roddy/bin/RoddyWorkflows
 
 ADD runwrapper.sh /roddy/bin/runwrapper.sh
+
+ADD scripts/run_workflow.pl /roddy/bin/run_workflow.pl
 
 ADD scripts/getFinalCNEFile.py /roddy/bin/getFinalCNEFile.py
 
@@ -108,7 +114,21 @@ ADD patches/analysisCopyNumberEstimation.xml /roddy/bin/Roddy/dist/plugins/CopyN
 
 RUN chown -R roddy:roddy /tmp/*
 RUN chown -R roddy:roddy /roddy
+RUN chmod -R 777 /data/datastore /roddy/bin /mnt/datastore /roddy/logs
 
 RUN adduser roddy sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN echo '127.0.0.1  master' >> /etc/hosts
+
+RUN apt-get update && apt-get -y install samtools
+
 USER roddy
+
+VOLUME /data/datastore
+VOLUME /roddy
+#VOLUME /roddy/bin
+VOLUME /mnt/datastore
+#VOLUME /roddy/logs
+VOLUME /var/run/gridengine
+
+CMD ["/bin/bash"]
