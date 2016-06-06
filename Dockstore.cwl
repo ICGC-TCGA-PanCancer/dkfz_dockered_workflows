@@ -10,15 +10,15 @@ description: |
     The DKFZ workflow from the ICGC PanCancer Analysis of Whole Genomes (PCAWG) project. For more information see the PCAWG project [page](https://dcc.icgc.org/pcawg) and our GitHub
     [page](https://github.com/ICGC-TCGA-PanCancer) for our code including the source for
     [this workflow](https://github.com/ICGC-TCGA-PanCancer/dkfz_dockered_workflows).
+    ## IMPORTANT NOTE
+    This workflow is not yet compatible with the Dockstore CLI since it uses two non-standard parameterizations for
+    Docker.  Because of this, the usage command show below uses a direct Docker call.  Future releases will
+    use the Docker command line interface since this is simplier to call.  In the command below make sure you
+    substitute the correct file paths for your system.
     ```
     Usage:
-    # fetch CWL
-    $> dockstore cwl --entry quay.io/pancancer/pcawg-dkfz-workflow:2.0.0 > Dockstore.cwl
-    # make a runtime JSON template and edit it
-    $> dockstore convert cwl2json --cwl Dockstore.cwl > Dockstore.json
-    # run it locally with the Dockstore CLI
-    $> dockstore launch --entry quay.io/pancancer/pcawg-dkfz-workflow:2.0.0 \
-        --json Dockstore.json
+    # using direct docker call to ensure '-h master' is used and the root filesystem is writeable
+    $>
     ```
 
 dct:creator:

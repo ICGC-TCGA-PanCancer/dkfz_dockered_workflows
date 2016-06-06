@@ -75,7 +75,11 @@ RUN easy_install -U 'distribute'; \
 
 ADD scripts/sgeResetup.sh /roddy/sgeResetup.sh
 
-ADD Roddy /roddy/bin/Roddy
+#ADD Roddy /roddy/bin/Roddy
+# now getting Roddy binary from a public URL since authors indicated this is fine
+RUN wget https://s3.amazonaws.com/pan-cancer-data/workflow-data/DKFZPancancer/Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
+    tar zxf Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
+    mv Roddy /roddy/bin/
 
 #ADD RoddyWorkflows /roddy/bin/RoddyWorkflows
 
