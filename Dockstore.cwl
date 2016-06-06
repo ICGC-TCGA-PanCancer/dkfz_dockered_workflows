@@ -11,14 +11,28 @@ description: |
     [page](https://github.com/ICGC-TCGA-PanCancer) for our code including the source for
     [this workflow](https://github.com/ICGC-TCGA-PanCancer/dkfz_dockered_workflows).
     ## IMPORTANT NOTE
-    This workflow is not yet compatible with the Dockstore CLI since it uses two non-standard parameterizations for
+    This workflow is not yet compatible with the Dockstore CLI since it uses two non-standard parametrizations for
     Docker.  Because of this, the usage command show below uses a direct Docker call.  Future releases will
-    use the Docker command line interface since this is simplier to call.  In the command below make sure you
+    use the Docker command line interface since this is simpler.  In the command below make sure you
     substitute the correct file paths for your system.
     ```
     Usage:
     # using direct docker call to ensure '-h master' is used and the root filesystem is writeable
-    $>
+    $> docker run -it --volume=<PATH>/dkfz-workflow-dependencies_150318_0951.tar.gz:/var/lib/cwl/dkfz-workflow-dependencies_150318_0951.tar.gz:ro \
+       -h master \
+       --volume=<PATH>/normal.bam:/var/lib/cwl/normal.bam:ro \
+       --volume=<PATH>/tumor.bam:/var/lib/cwl/tumor.bam:ro \
+       --volume=<PATH>/delly.bedpe.txt:/var/lib/cwl/delly.bedpe.txt:ro \
+       --volume=<PATH>/outputs:/var/spool/cwl:rw \
+       --volume=<PATH>:/tmp:rw \
+       --workdir=/var/spool/cwl \
+       --user=1000 --rm --env=TMPDIR=/tmp \
+       quay.io/pancancer/pcawg-dkfz-workflow:2.0.0 /bin/bash
+    # now run the wrapper inside this container to execute the workflow
+    $>perl /roddy/bin/run_workflow.pl --run-id run_id \
+           --normal-bam /var/lib/cwl/normal.bam --tumor-bam /var/lib/cwl/tumor.bam \
+           --reference-gz /var/lib/cwl/dkfz-workflow-dependencies_150318_0951.tar.gz  \
+           --delly-bedpe /var/lib/cwl/delly.bedpe.txt
     ```
 
 dct:creator:
@@ -62,38 +76,6 @@ outputs:
   - id: "#somatic_sv_vcf"
     type: File
     outputBinding:
-      glob: "*.somatic.sv.vcf.gz"
-  - id: "#somatic_bedpe"
-    type: File
-    outputBinding:
-      glob: "*.somatic.sv.bedpe.txt"
-  - id: "#cov"
-    type: File
-    outputBinding:
-      glob: "*.sv.cov.tar.gz"
-  - id: "#cov_plots"
-    type: File
-    outputBinding:
-      glob: "*.sv.cov.plots.tar.gz"
-  - id: "#germline_sv_vcf"
-    type: File
-    outputBinding:
-      glob: "*.germline.sv.vcf.gz"
-  - id: "#germline_bedpe"
-    type: File
-    outputBinding:
-      glob: "*.germline.sv.bedpe.txt"
-  - id: "#sv_log"
-    type: File
-    outputBinding:
-      glob: "*.sv.log.tar.gz"
-  - id: "#sv_timing"
-    type: File
-    outputBinding:
-      glob: "*.sv.timing.json"
-  - id: "#sv_qc"
-    type: File
-    outputBinding:
-      glob: "*.sv.qc.json"
+      glob: "*.somatic.snv_mnv.vcf.gz"
 
 baseCommand: ["perl", "/roddy/bin/run_workflow.pl"]
