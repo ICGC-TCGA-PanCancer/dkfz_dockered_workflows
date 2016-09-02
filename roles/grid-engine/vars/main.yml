@@ -1,0 +1,4 @@
+---
+# file: roles/grid-engine/vars/main.yml
+
+single_node: true

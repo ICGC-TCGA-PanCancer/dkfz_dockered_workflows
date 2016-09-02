@@ -1,0 +1,22 @@
+--- 
+# file: docker-start.yml
+# This file is used for installing a seqware container
+
+- hosts: master
+  sudo: True
+  roles:
+    - { role: grid-engine, grid_engine_master: True }
+   
+- hosts: all
+  sudo: True
+  tasks:
+  - name: Start all required services
+    service: name={{ item }} state=restarted 
+    with_items: 
+     - gridengine-master
+     - gridengine-exec
+    
+- hosts: all 
+  sudo: True
+  roles:
+    - { role: grid-engine, single_node: True , grid_engine_master: True }

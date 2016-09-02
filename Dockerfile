@@ -122,7 +122,30 @@ RUN echo '127.0.0.1  master' >> /etc/hosts
 
 RUN apt-get update && apt-get -y install samtools
 
-USER roddy
+# use ansible to create our dockerfile, see http://www.ansible.com/2014/02/12/installing-and-building-docker-with-ansible
+RUN apt-get -y update ;\
+    apt-get install -y python-yaml python-jinja2 git wget sudo;\
+    git clone http://github.com/ansible/ansible.git /tmp/ansible
+WORKDIR /tmp/ansible
+# get a specific version of ansible , add sudo to seqware, create a working directory
+RUN git checkout v1.6.10 ;
+ENV PATH /tmp/ansible/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV ANSIBLE_LIBRARY /tmp/ansible/library
+ENV PYTHONPATH /tmp/ansible/lib:$PYTHON_PATH
+
+# setup sge
+WORKDIR /root 
+RUN echo 5
+COPY inventory /etc/ansible/hosts
+COPY roles /root/roles
+USER root
+COPY scripts/start.sh /start.sh
+COPY docker-start.yml /root/docker-start.yml
+RUN sudo chmod a+x /start.sh
+CMD ["/bin/bash", "/start.sh"]
+
+
+# volumes needed for r/w access
 
 VOLUME /data/datastore
 VOLUME /roddy
@@ -130,5 +153,3 @@ VOLUME /roddy
 VOLUME /mnt/datastore
 #VOLUME /roddy/logs
 VOLUME /var/run/gridengine
-
-CMD ["/bin/bash"]

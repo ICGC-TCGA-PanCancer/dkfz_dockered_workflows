@@ -1,0 +1,20 @@
+---
+# file: roles/grid-engine/tasks/main.yml
+
+# common tasks follow
+- name: SGE | Install gridengine-client
+  apt: pkg=gridengine-client state=present update_cache=yes cache_valid_time=3600
+  
+- name: SGE | Install gridengine-common
+  apt: pkg=gridengine-common state=present update_cache=yes cache_valid_time=3600
+
+- name: SGE | Install gridengine-exec
+  apt: pkg=gridengine-exec state=present update_cache=yes cache_valid_time=3600
+  
+ 
+# role specific tasks follow
+- include: 'master.yml'
+  when: grid_engine_master
+
+- include: 'worker.yml'
+  when: single_node or not grid_engine_master
