@@ -172,3 +172,5 @@ VOLUME /etc/gridengine/templates
 VOLUME /var/spool
 VOLUME /var/lib/gridengine/default
 VOLUME /var/lib/gridengine/default/common
+# needed to run the workflow
+VOLUME /reference
