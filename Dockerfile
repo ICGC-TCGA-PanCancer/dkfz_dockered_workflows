@@ -157,6 +157,7 @@ VOLUME /mnt/datastore
 #VOLUME /roddy/logs
 VOLUME /var/run/gridengine
 VOLUME /etc/ansible
+VOLUME /root
 VOLUME /root/.ansible
 # needed to run apt
 VOLUME /var/lib/apt/lists
@@ -170,3 +171,4 @@ VOLUME /usr/share
 VOLUME /etc/gridengine/templates
 VOLUME /var/spool
 VOLUME /var/lib/gridengine/default
+VOLUME /var/lib/gridengine/default/common

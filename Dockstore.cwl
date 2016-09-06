@@ -37,7 +37,7 @@ outputs:
     type: File
     outputBinding:
       glob: '*.somatic.snv_mnv.vcf.gz'
-baseCommand: [perl, /roddy/bin/run_workflow.pl]
+baseCommand: [/start.sh, perl, /roddy/bin/run_workflow.pl]
 doc: |
   ![pcawg logo](https://dcc.icgc.org/styles/images/PCAWG-final-small.png "pcawg logo")
   # PCAWG DKFZ Workflow

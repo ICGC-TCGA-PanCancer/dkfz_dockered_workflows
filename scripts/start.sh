@@ -5,8 +5,9 @@ set -o pipefail
 # kick off all services
 HOSTNAME=`hostname`
 echo $HOSTNAME
-sed -i 's/placeholder/'$HOSTNAME'/g' /etc/ansible/hosts
+sudo sed -i 's/placeholder/'$HOSTNAME'/g' /etc/ansible/hosts
 cat /etc/ansible/hosts
+sudo chmod -R a+wrx /root
 ansible-playbook /root/docker-start.yml -c local
 #cd ~seqware
 #source ~seqware/.bash_profile
