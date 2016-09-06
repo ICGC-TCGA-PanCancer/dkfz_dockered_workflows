@@ -77,7 +77,7 @@ ADD scripts/sgeResetup.sh /roddy/sgeResetup.sh
 
 #ADD Roddy /roddy/bin/Roddy
 # now getting Roddy binary from a public URL since authors indicated this is fine
-RUN wget https://s3.amazonaws.com/pan-cancer-data/workflow-data/DKFZPancancer/Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
+RUN wget --quiet https://s3.amazonaws.com/pan-cancer-data/workflow-data/DKFZPancancer/Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
     tar zxf Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
     mv Roddy /roddy/bin/
 
@@ -135,7 +135,7 @@ ENV PYTHONPATH /tmp/ansible/lib:$PYTHON_PATH
 
 # setup sge
 WORKDIR /root 
-RUN echo 5
+RUN echo 6
 COPY inventory /etc/ansible/hosts
 COPY roles /root/roles
 USER root
