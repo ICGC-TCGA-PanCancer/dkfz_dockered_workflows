@@ -3,9 +3,6 @@
 - name: SGE | Install apt-utils
   apt: pkg=apt-utils state=present update_cache=yes cache_valid_time=3600
 
-- name: SGE | Install gridengine-qmon
-  apt: pkg=gridengine-qmon state=present update_cache=yes cache_valid_time=3600
-
 - name: SGE | Install gridengine-master 
   apt: pkg=gridengine-master state=present update_cache=yes cache_valid_time=3600
 
@@ -13,8 +10,8 @@
   template: src=act_qmaster.j2 dest=/var/lib/gridengine/default/common/act_qmaster
   when: docker is not defined
 
-- name: SGE | Ensure gridengine-master started 
-  service: name=gridengine-master state=started
+- name: SGE | Ensure gridengine-master restarted 
+  service: name=gridengine-master state=restarted
 
 - name: SGE | Configure master
   command: qconf -as {{ inventory_hostname }}

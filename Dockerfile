@@ -123,15 +123,16 @@ RUN echo '127.0.0.1  master' >> /etc/hosts
 RUN apt-get update && apt-get -y install samtools
 
 # use ansible to create our dockerfile, see http://www.ansible.com/2014/02/12/installing-and-building-docker-with-ansible
+RUN mkdir /ansible
+WORKDIR /ansible
 RUN apt-get -y update ;\
     apt-get install -y python-yaml python-jinja2 git wget sudo;\
-    git clone http://github.com/ansible/ansible.git /tmp/ansible
-WORKDIR /tmp/ansible
+    git clone http://github.com/ansible/ansible.git /ansible
 # get a specific version of ansible , add sudo to seqware, create a working directory
 RUN git checkout v1.6.10 ;
-ENV PATH /tmp/ansible/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV ANSIBLE_LIBRARY /tmp/ansible/library
-ENV PYTHONPATH /tmp/ansible/lib:$PYTHON_PATH
+ENV PATH /ansible/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV ANSIBLE_LIBRARY /ansible/library
+ENV PYTHONPATH /ansible/lib:$PYTHON_PATH
 
 # setup sge
 WORKDIR /root 
@@ -146,6 +147,8 @@ CMD ["/bin/bash", "/start.sh"]
 
 
 # volumes needed for r/w access
+RUN apt-get install -y python-apt
+#RUN apt-get install -y python-apt gridengine-qmon
 
 VOLUME /data/datastore
 VOLUME /roddy
@@ -153,3 +156,17 @@ VOLUME /roddy
 VOLUME /mnt/datastore
 #VOLUME /roddy/logs
 VOLUME /var/run/gridengine
+VOLUME /etc/ansible
+VOLUME /root/.ansible
+# needed to run apt
+VOLUME /var/lib/apt/lists
+VOLUME /var/cache/apt/archives
+VOLUME /var/log
+VOLUME /usr/lib
+VOLUME /var/lib/dpkg
+VOLUME /usr/bin
+VOLUME /usr/share
+# for SGE
+VOLUME /etc/gridengine/templates
+VOLUME /var/spool
+VOLUME /var/lib/gridengine/default
