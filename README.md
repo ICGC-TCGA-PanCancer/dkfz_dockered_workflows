@@ -19,7 +19,7 @@ You can download them using:
 
     gtdownload -vv -c gnos.pem https://gtrepo-dkfz.annailabs.com/cghub/data/analysis/download/971daec1-e346-4c0f-bd80-f6d1feb69968
 
-**NOTE:** If you intend to run this container on its own, the file below is necessary. If you are running this container as a part of [DEWrapperWorkflow](https://github.com/ICGC-TCGA-PanCancer/DEWrapperWorkflow), you will not need to downloaded: these dependencies will be downloaded by DEWrapperWorkflow.
+**NOTE:** If you intend to run this container on its own, the file below is necessary. If you are running this container as a part of [DEWrapperWorkflow](https://github.com/ICGC-TCGA-PanCancer/DEWrapperWorkflow), you will not need to download it: these dependencies will be downloaded by DEWrapperWorkflow.
 
 The DKFZ dependency bundle is located in GNOS:
 https://gtrepo-dkfz.annailabs.com/cghub/data/analysis/download/32749c9f-d8aa-4ff5-b32c-296976aec706
