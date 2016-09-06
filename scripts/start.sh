@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -o errexit
 set -o pipefail
+set -x
 
 # kick off all services
 HOSTNAME=`hostname`
@@ -13,4 +14,4 @@ ansible-playbook /root/docker-start.yml -c local
 #source ~seqware/.bash_profile
 #source ~seqware/.bashrc 
 #sudo -E -u seqware -i /bin/bash -c "${1-bash}"
-sudo -E -u roddy -i /bin/bash -c "${1-bash}"
+sudo -E -u roddy -i /bin/bash -c "$*"
