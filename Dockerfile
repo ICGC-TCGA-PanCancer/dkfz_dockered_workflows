@@ -144,7 +144,7 @@ VOLUME /etc/gridengine/templates /var/spool /var/lib/gridengine/default /var/lib
 # needed to run apt
 VOLUME /var/lib/apt/lists /var/cache/apt/archives /var/log /usr/lib /var/lib/dpkg /usr/bin /usr/share
 # needed to run the workflow
-VOLUME /reference /data/datastore /roddy /mnt/datastore /etc
+VOLUME /reference /data/datastore /roddy /mnt /mnt/datastore /etc
 
 # modify for quick turn-around
 ADD scripts/run_workflow.pl /roddy/bin/run_workflow.pl
