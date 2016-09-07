@@ -139,6 +139,7 @@
 - name: SGE | Setup serial profile environment
   command: "{{ item }}"
   with_items:
+      - qconf -Ap /etc/gridengine/templates/sge_serial_profile || true
       - qconf -aattr queue pe_list serial main.q
   when:  "docker is not defined and 'serial is not a parallel environment' in sge_parallel_env.stderr or docker is not defined and serial_profile.changed"
 
