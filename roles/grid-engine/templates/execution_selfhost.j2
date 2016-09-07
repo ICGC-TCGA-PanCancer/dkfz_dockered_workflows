@@ -1,4 +1,4 @@
 #!/bin/sh
 sleep 1
 perl -pi -e 's/^hostname.*$/hostname {{ inventory_hostname }}/' $1
-perl -pi -e 's/^complex_values.*$/complex_values h_vmem={{ ansible_memtotal_mb * 1048576 }}/' $1
+# perl -pi -e 's/^complex_values.*$/complex_values h_vmem={{ ansible_memtotal_mb * 1048576 }}/' $1
