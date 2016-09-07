@@ -174,3 +174,4 @@ VOLUME /var/lib/gridengine/default
 VOLUME /var/lib/gridengine/default/common
 # needed to run the workflow
 VOLUME /reference
+RUN chmod a+wrx /reference /mnt/datastore /data/datastore 
