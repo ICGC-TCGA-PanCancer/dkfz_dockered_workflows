@@ -79,7 +79,7 @@
   command: qconf -dhgrp @allhosts
 
 - name: SGE | delete current environment 
-  command: qconf -dp pename serial
+  command: qconf -dp serial
 
 
 # Again, we don't want to do this if it already exists, never counts as a change registering variables
