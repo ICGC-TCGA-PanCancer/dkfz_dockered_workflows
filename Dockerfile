@@ -139,12 +139,9 @@ COPY docker-start.yml /root/docker-start.yml
 RUN sudo chmod a+x /start.sh
 
 # needed for starting up the container
-VOLUME /var/run/gridengine /etc/ansible /root /root/.ansible
-VOLUME /etc/gridengine/templates /var/spool /var/lib/gridengine/default /var/lib/gridengine/default/common
-# needed to run apt
-VOLUME /var/lib/apt/lists /var/cache/apt/archives /var/log /usr/lib /var/lib/dpkg /usr/bin /usr/share
-# needed to run the workflow
-VOLUME /reference /data/datastore /roddy /mnt /mnt/datastore /etc
+VOLUME /var /etc /root /usr /reference /data /roddy /mnt
+# nested volumes, not sure why we need these but otherwise they end up read-only
+VOLUME /var/run/gridengine
 
 # modify for quick turn-around
 ADD scripts/run_workflow.pl /roddy/bin/run_workflow.pl
