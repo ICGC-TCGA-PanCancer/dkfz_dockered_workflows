@@ -112,21 +112,16 @@ RUN cd /roddy/bin/Roddy/dist/runtimeDevel && ln -sf groovy* groovy && ln -sf jdk
 
 ADD patches/analysisCopyNumberEstimation.xml /roddy/bin/Roddy/dist/plugins/CopyNumberEstimationWorkflow_1.0.189/resources/configurationFiles/analysisCopyNumberEstimation.xml
 
-RUN chown -R roddy:roddy /tmp/*
-RUN chown -R roddy:roddy /roddy
-RUN chmod -R 777 /data/datastore /roddy/bin /mnt/datastore /roddy/logs
-
+RUN chown -R roddy:roddy /tmp/* && chown -R roddy:roddy /roddy && chmod -R 777 /data/datastore /roddy/bin /mnt/datastore /roddy/logs
 RUN adduser roddy sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 RUN echo '127.0.0.1  master' >> /etc/hosts
-
-RUN apt-get update && apt-get -y install samtools
 
 # use ansible to create our dockerfile, see http://www.ansible.com/2014/02/12/installing-and-building-docker-with-ansible
 RUN mkdir /ansible
 WORKDIR /ansible
 RUN apt-get -y update ;\
-    apt-get install -y python-yaml python-jinja2 git wget sudo;\
+    apt-get install -y samtools python-apt python-yaml python-jinja2 git wget sudo;\
     git clone http://github.com/ansible/ansible.git /ansible
 # get a specific version of ansible , add sudo to seqware, create a working directory
 RUN git checkout v1.6.10 ;
@@ -136,42 +131,19 @@ ENV PYTHONPATH /ansible/lib:$PYTHON_PATH
 
 # setup sge
 WORKDIR /root 
-RUN echo 6
 COPY inventory /etc/ansible/hosts
 COPY roles /root/roles
 USER root
 COPY scripts/start.sh /start.sh
 COPY docker-start.yml /root/docker-start.yml
 RUN sudo chmod a+x /start.sh
-CMD ["/bin/bash", "/start.sh"]
 
-
-# volumes needed for r/w access
-RUN apt-get install -y python-apt
-#RUN apt-get install -y python-apt gridengine-qmon
-
-VOLUME /data/datastore
-VOLUME /roddy
-#VOLUME /roddy/bin
-VOLUME /mnt/datastore
-#VOLUME /roddy/logs
-VOLUME /var/run/gridengine
-VOLUME /etc/ansible
-VOLUME /root
-VOLUME /root/.ansible
+# needed for starting up the container
+VOLUME /var/run/gridengine /etc/ansible /root /root/.ansible
+VOLUME /etc/gridengine/templates /var/spool /var/lib/gridengine/default /var/lib/gridengine/default/common
 # needed to run apt
-VOLUME /var/lib/apt/lists
-VOLUME /var/cache/apt/archives
-VOLUME /var/log
-VOLUME /usr/lib
-VOLUME /var/lib/dpkg
-VOLUME /usr/bin
-VOLUME /usr/share
-# for SGE
-VOLUME /etc/gridengine/templates
-VOLUME /var/spool
-VOLUME /var/lib/gridengine/default
-VOLUME /var/lib/gridengine/default/common
+VOLUME /var/lib/apt/lists /var/cache/apt/archives /var/log /usr/lib /var/lib/dpkg /usr/bin /usr/share
 # needed to run the workflow
-VOLUME /reference
-RUN chmod a+wrx /reference /mnt/datastore /data/datastore 
+VOLUME /reference /data/datastore /roddy /mnt/datastore
+
+CMD ["/bin/bash", "/start.sh"]

@@ -42,6 +42,8 @@ run("samtools index /data/datastore/tumor/tumor.bam");
 run("ln -s $bedpe /data/datastore/delly/delly.bedpe.txt");
 run("mkdir -p /mnt/datastore/workflow_data/");
 run("mkdir -p \$TMPDIR/reference");
+# make sure we have permissions on these volumes
+run("sudo chmod a+wrx /reference /mnt/datastore /data/datastore");
 run("cd \$TMPDIR/reference && tar zxf $reference");
 run("mkdir -p /mnt/datastore/ && ln -s \$TMPDIR/reference/bundledFiles /mnt/datastore/");
 
