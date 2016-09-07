@@ -85,7 +85,7 @@ RUN wget --quiet https://s3.amazonaws.com/pan-cancer-data/workflow-data/DKFZPanc
 
 ADD runwrapper.sh /roddy/bin/runwrapper.sh
 
-ADD scripts/run_workflow.pl /roddy/bin/run_workflow.pl
+#ADD scripts/run_workflow.pl /roddy/bin/run_workflow.pl
 
 ADD scripts/getFinalCNEFile.py /roddy/bin/getFinalCNEFile.py
 
@@ -146,4 +146,6 @@ VOLUME /var/lib/apt/lists /var/cache/apt/archives /var/log /usr/lib /var/lib/dpk
 # needed to run the workflow
 VOLUME /reference /data/datastore /roddy /mnt/datastore /etc
 
+# modify for quick turn-around
+ADD scripts/run_workflow.pl /roddy/bin/run_workflow.pl
 CMD ["/bin/bash", "/start.sh"]
