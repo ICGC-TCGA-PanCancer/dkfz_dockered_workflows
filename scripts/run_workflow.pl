@@ -43,10 +43,10 @@ run("ln -s $bedpe /data/datastore/delly/delly.bedpe.txt");
 run("mkdir -p /mnt/datastore/workflow_data/");
 run("mkdir -p \$TMPDIR/reference");
 # make sure we have permissions on these volumes
-run("sudo chmod a+wrx /reference");
+run("sudo chmod R a+wrx /reference");
 run("cd \$TMPDIR/reference && tar zxf $reference");
 run("mkdir -p /mnt/datastore/ && ln -s \$TMPDIR/reference/bundledFiles /mnt/datastore/");
-run("sudo chmod a+wrx /mnt/datastore /data/datastore");
+run("sudo chmod R a+wrx /mnt/datastore /data/datastore");
 
 # MAKE CONFIG
 # the default config is the workflow_local.ini and has most configs ready to go
