@@ -32,6 +32,12 @@ inputs:
     inputBinding:
       position: 4
       prefix: --reference-gz
+  delly-bedpe:
+    type: File
+    inputBinding:
+      position: 5 
+      prefix: --delly-bedpe
+
 outputs:
   somatic_sv_vcf:
     type: File
