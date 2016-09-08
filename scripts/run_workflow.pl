@@ -47,6 +47,7 @@ run("sudo chmod -R a+wrx /reference");
 run("cd \$TMPDIR/reference && tar zxf $reference");
 run("mkdir -p /mnt/datastore/ && ln -s \$TMPDIR/reference/bundledFiles /mnt/datastore/");
 run("sudo chmod -R a+wrx /mnt/datastore /data/datastore");
+run("mkdir -p /mnt/datastore/resultdata");
 
 # MAKE CONFIG
 # the default config is the workflow_local.ini and has most configs ready to go
