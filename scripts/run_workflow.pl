@@ -49,8 +49,6 @@ run("mkdir -p /mnt/datastore/ && ln -s \$TMPDIR/reference/bundledFiles /mnt/data
 run("sudo chmod -R a+wrx /mnt/datastore /data/datastore");
 run("mkdir -p /mnt/datastore/resultdata");
 run("echo \"options(bitmapType='cairo')\" > /var/spool/cwl/.Rprofile");
-# automate odd fix in readme file
-run("perl -pi.orig -e 's/(CLI\.executionServiceUser=)root/${1}roddy/;' /roddy/bin/Roddy/*.ini");
 
 # MAKE CONFIG
 # the default config is the workflow_local.ini and has most configs ready to go
