@@ -2,7 +2,6 @@
 
 use strict;
 use Getopt::Long;
-use Cwd;
 
 ########
 # ABOUT
@@ -13,7 +12,6 @@ use Cwd;
 
 my @files;
 my ($run_id, $normal_bam, $tumor_bam, $bedpe, $reference);
-my $cwd = cwd();
 
 # workflow version
 my $wfversion = "2.0.0";
@@ -32,7 +30,6 @@ GetOptions (
 system("sudo chmod a+rwx /tmp");
 
 
-print "Current working directory is: $cwd\n";
 my $pwd = `pwd`;
 print "Present working directory is: $pwd\n";
 
@@ -75,12 +72,10 @@ close OUT;
 # NOW RUN WORKFLOW
 my $error = system("/bin/bash -c '/roddy/bin/runwrapper.sh'");
 
-# MOVE THESE TO THE RIGHT PLACE
-print "Current working directory is: $cwd\n";
-system("mv /mnt/datastore/resultdata/* $cwd");
-$pwd = `pwd`;
-print "Present working directory is: $pwd\n";
-my $resultData = `ls $cwd`;
+# MOVE THESE TO THE RIGHT PLACE FOR PROVISION OUT
+my $outputDir = "/var/spool/cwl";
+system("mv /mnt/datastore/resultdata/* $outputDir");
+my $resultData = `ls $outputDir`;
 print "Result directory listing is: $resultData\n";
 
 
