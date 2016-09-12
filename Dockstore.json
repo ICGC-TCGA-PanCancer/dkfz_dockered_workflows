@@ -2,67 +2,54 @@
   "run-id": "run_id",
   "tumor-bam":
   {
-    "path":"/mnt/test_data_delly/HCC1143_ds/HCC1143.bam",
+    "path":"/media/large_volume/CGP-Somatic-Docker-input/HCC1143_ds/HCC1143_ds/HCC1143.bam",
     "class":"File"
   },
   "normal-bam":
   {
-    "path":"/mnt/test_data_delly/HCC1143_ds/HCC1143_BL.bam",
+    "path":"/media/large_volume/CGP-Somatic-Docker-input/HCC1143_ds/HCC1143_ds/HCC1143_BL.bam",
     "class":"File"
   },
   "reference-gz":
   {
-    "path": "/mnt/dkfz_files/32749c9f-d8aa-4ff5-b32c-296976aec706/dkfz-workflow-dependencies_150318_0951.tar.gz",
+    "path": "/media/large_volume/dkfz_dockered_dependencies/dkfz-workflow-dependencies_150318_0951.tar.gz",
     "class": "File"
   },
   "delly-bedpe":
   {
-    "path":"/mnt/test_data_delly_output/datastore/launcher-4bbba8cf-06be-47f6-8eed-315ca47e2954/outputs/run_id.embl-delly_1-3-0-preFilter.20150318.somatic.sv.bedpe.txt",
+    "path":"run_id.embl-delly_1-3-0-preFilter.20150318.somatic.sv.bedpe.txt",
     "class":"File"
   },
-  "somatic_sv_vcf":
-  {
-    "path":"/mnt/test_data_delly_output/delly.somatic.sv.vcf.gz",
-    "class":"File"
+  "germline_indel_vcf_gz": {
+    "path": "/media/large_volume/output/germline.indel.vcf.gz",
+    "class": "File"
   },
-  "somatic_bedpe":
-  {
-    "path":"/mnt/test_data_delly_output/delly.somatic.sv.bedpe.txt",
-    "class":"File"
+  "somatic_snv_mnv_vcf_gz": {
+    "path": "/media/large_volume/output/somatic.snv.mnv.vcf.gz",
+    "class": "File"
   },
-  "cov":
-  {
-    "path":"/mnt/test_data_delly_output/delly.sv.cov.tar.gz",
-    "class":"File"
+  "germline_snv_mnv_vcf_gz": {
+    "path": "/media/large_volume/output/germline.snv.mnv.vcf.gz",
+    "class": "File"
   },
-  "cov_plots":
-  {
-    "path":"/mnt/test_data_delly_output/delly.sv.cov.plots.tar.gz",
-    "class":"File"
+  "somatic_cnv_tar_gz": {
+    "path": "/media/large_volume/output/somatic.cnv.tar.gz",
+    "class": "File"
   },
-  "germline_sv_vcf":
-  {
-    "path":"/mnt/test_data_delly_output/delly.germline.sv.vcf.gz",
-    "class":"File"
+  "somatic_cnv_vcf_gz": {
+    "path": "/media/large_volume/output/somatic.cnv.vcf.gz",
+    "class": "File"
   },
-  "germline_bedpe":
-  {
-    "path":"/mnt/test_data_delly_output/delly.germline.sv.bedpe.txt",
-    "class":"File"
+  "somatic_indel_tar_gz": {
+    "path": "/media/large_volume/output/somatic.indel.tar.gz",
+    "class": "File"
   },
-  "sv_log":
-  {
-    "path":"/mnt/test_data_delly_output/delly.sv.log.tar.gz",
-    "class":"File"
+  "somatic_snv_mnv_tar_gz": {
+    "path": "/media/large_volume/output/somatic.snv.mnv.tar.gz",
+    "class": "File"
   },
-  "sv_timing":
-  {
-    "path":"/mnt/test_data_delly_output/delly.sv.timing.json",
-    "class":"File"
-  },
-  "sv_qc":
-  {
-    "path":"/mnt/test_data_delly_output/delly.sv.qc.json",
-    "class":"File"
+  "somatic_indel_vcf_gz": {
+    "path": "/media/large_volume/output/somatic.indel.vcf.gz",
+    "class": "File"
   }
 }
