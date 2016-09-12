@@ -31,6 +31,11 @@ GetOptions (
 # PARSE OPTIONS
 system("sudo chmod a+rwx /tmp");
 
+
+print "Current working directory is: $cwd\n";
+my $pwd = `pwd`;
+print "Present working directory is: $pwd\n";
+
 # SYMLINK REF FILES
 run("mkdir -p /data/datastore/normal");
 run("mkdir -p /data/datastore/tumor/");
@@ -71,7 +76,13 @@ close OUT;
 my $error = system("/bin/bash -c '/roddy/bin/runwrapper.sh'");
 
 # MOVE THESE TO THE RIGHT PLACE
+print "Current working directory is: $cwd\n";
 system("mv /mnt/datastore/resultdata/* $cwd");
+$pwd = `pwd`;
+print "Present working directory is: $pwd\n";
+my $resultData = `ls $cwd`;
+print "Result directory listing is: $resultData\n";
+
 
 # RETURN RESULT
 exit($error);

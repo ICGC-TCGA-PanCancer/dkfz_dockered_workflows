@@ -39,10 +39,39 @@ inputs:
       prefix: --delly-bedpe
 
 outputs:
-  somatic_sv_vcf:
+  somatic_cnv_tar_gz:
     type: File
     outputBinding:
-      glob: '*.somatic.snv_mnv.vcf.gz'
+      glob: '*.somatic.cnv.tar.gz'
+  somatic_cnv_vcf_gz:
+    type: File
+    outputBinding:
+      glob: '*.somatic.cnv.vcf.gz'
+  germline_indel_vcf_gz:
+    type: File
+    outputBinding:
+      glob: '*.germline.indel.vcf.gz'
+  somatic_indel_tar_gz:
+    type: File
+    outputBinding:
+      glob: '*.somatic.indel.tar.gz'
+  somatic_indel_vcf_gz:
+    type: File
+    outputBinding:
+      glob: '*.somatic.indel.vcf.gz'
+  germline_snv_mnv_vcf_gz:
+    type: File
+    outputBinding:
+      glob: '*.germline.snv_mnv.vcf.gz'
+  somatic_snv_mnv_tar_gz:
+    type: File
+    outputBinding:
+      glob: '*.germline.snv_mnv.tar.gz'
+  somatic_snv_mnv_vcf_gz:
+    type: File
+    outputBinding:
+      glob: '*.germline.snv_mnv.vcf.gz'
+
 baseCommand: [/start.sh, perl, /roddy/bin/run_workflow.pl]
 doc: |
   ![pcawg logo](https://dcc.icgc.org/styles/images/PCAWG-final-small.png "pcawg logo")
