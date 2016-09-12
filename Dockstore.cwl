@@ -66,11 +66,11 @@ outputs:
   somatic_snv_mnv_tar_gz:
     type: File
     outputBinding:
-      glob: '*.germline.snv_mnv.tar.gz'
+      glob: '*.somatic.snv_mnv.tar.gz'
   somatic_snv_mnv_vcf_gz:
     type: File
     outputBinding:
-      glob: '*.germline.snv_mnv.vcf.gz'
+      glob: '*.somatic.snv_mnv.vcf.gz'
 
 baseCommand: [/start.sh, perl, /roddy/bin/run_workflow.pl]
 doc: |
