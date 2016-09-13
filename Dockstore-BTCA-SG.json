@@ -1,0 +1,56 @@
+{
+  "run-id": "run_id",
+  "tumor-bam":
+  {
+    "path":"/home/ubuntu/download/d080db6b-583b-46fe-9e2b-b70069ebe960/a51ad19bf9dcf4819371740c732bcba0.bam",
+    "class":"File"
+  },
+  "normal-bam":
+  {
+    "path":"/home/ubuntu/download/34d42b18-1717-4720-a487-4459165c6782/3a62b4250f4c7227fd5283888f2b598e.bam",
+    "class":"File"
+  },
+  "reference-gz":
+  {
+    "path": "/media/large_volume/dkfz_dockered_dependencies/dkfz-workflow-dependencies_150318_0951.tar.gz",
+    "class": "File"
+  },
+  "delly-bedpe":
+  {
+    "path":"run1_63/f0e0d978-3e32-4444-a07a-26049b2594e6.embl-delly_1-0-0-preFilter.20150805.somatic.sv.bedpe.txt",
+    "class":"File"
+  },
+  "germline_indel_vcf_gz": {
+    "path": "/media/large_volume/output/germline.indel.vcf.gz",
+    "class": "File"
+  },
+  "somatic_snv_mnv_vcf_gz": {
+    "path": "/media/large_volume/output/somatic.snv.mnv.vcf.gz",
+    "class": "File"
+  },
+  "germline_snv_mnv_vcf_gz": {
+    "path": "/media/large_volume/output/germline.snv.mnv.vcf.gz",
+    "class": "File"
+  },
+  "somatic_cnv_tar_gz": {
+    "path": "/media/large_volume/output/somatic.cnv.tar.gz",
+    "class": "File"
+  },
+  "somatic_cnv_vcf_gz": {
+    "path": "/media/large_volume/output/somatic.cnv.vcf.gz",
+    "class": "File"
+  },
+  "somatic_indel_tar_gz": {
+    "path": "/media/large_volume/output/somatic.indel.tar.gz",
+    "class": "File"
+  },
+  "somatic_snv_mnv_tar_gz": {
+    "path": "/media/large_volume/output/somatic.snv.mnv.tar.gz",
+    "class": "File"
+  },
+  "somatic_indel_vcf_gz": {
+    "path": "/media/large_volume/output/somatic.indel.vcf.gz",
+    "class": "File"
+  }
+}
+
