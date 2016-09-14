@@ -77,7 +77,7 @@ ADD scripts/sgeResetup.sh /roddy/sgeResetup.sh
 
 #ADD Roddy /roddy/bin/Roddy
 # now getting Roddy binary from a public URL since authors indicated this is fine
-RUN wget https://s3.amazonaws.com/pan-cancer-data/workflow-data/DKFZPancancer/Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
+RUN wget --quiet https://s3.amazonaws.com/pan-cancer-data/workflow-data/DKFZPancancer/Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
     tar zxf Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
     mv Roddy /roddy/bin/
 
@@ -85,7 +85,7 @@ RUN wget https://s3.amazonaws.com/pan-cancer-data/workflow-data/DKFZPancancer/Ro
 
 ADD runwrapper.sh /roddy/bin/runwrapper.sh
 
-ADD scripts/run_workflow.pl /roddy/bin/run_workflow.pl
+#ADD scripts/run_workflow.pl /roddy/bin/run_workflow.pl
 
 ADD scripts/getFinalCNEFile.py /roddy/bin/getFinalCNEFile.py
 
@@ -112,23 +112,37 @@ RUN cd /roddy/bin/Roddy/dist/runtimeDevel && ln -sf groovy* groovy && ln -sf jdk
 
 ADD patches/analysisCopyNumberEstimation.xml /roddy/bin/Roddy/dist/plugins/CopyNumberEstimationWorkflow_1.0.189/resources/configurationFiles/analysisCopyNumberEstimation.xml
 
-RUN chown -R roddy:roddy /tmp/*
-RUN chown -R roddy:roddy /roddy
-RUN chmod -R 777 /data/datastore /roddy/bin /mnt/datastore /roddy/logs
-
+RUN chown -R roddy:roddy /tmp/* && chown -R roddy:roddy /roddy && chmod -R 777 /data/datastore /roddy/bin /mnt/datastore /roddy/logs
 RUN adduser roddy sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 RUN echo '127.0.0.1  master' >> /etc/hosts
 
-RUN apt-get update && apt-get -y install samtools
+# use ansible to create our dockerfile, see http://www.ansible.com/2014/02/12/installing-and-building-docker-with-ansible
+RUN mkdir /ansible
+WORKDIR /ansible
+RUN apt-get -y update ;\
+    apt-get install -y samtools python-apt python-yaml python-jinja2 git wget sudo;\
+    git clone http://github.com/ansible/ansible.git /ansible
+# get a specific version of ansible , add sudo to seqware, create a working directory
+RUN git checkout v1.6.10 ;
+ENV PATH /ansible/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV ANSIBLE_LIBRARY /ansible/library
+ENV PYTHONPATH /ansible/lib:$PYTHON_PATH
 
-USER roddy
+# setup sge
+WORKDIR /root 
+COPY inventory /etc/ansible/hosts
+COPY roles /root/roles
+USER root
+COPY scripts/start.sh /start.sh
+COPY docker-start.yml /root/docker-start.yml
+RUN sudo chmod a+x /start.sh
 
-VOLUME /data/datastore
-VOLUME /roddy
-#VOLUME /roddy/bin
-VOLUME /mnt/datastore
-#VOLUME /roddy/logs
+# needed for starting up the container
+VOLUME /var /etc /root /usr /reference /data /roddy /mnt
+# nested volumes, not sure why we need these but otherwise they end up read-only
 VOLUME /var/run/gridengine
 
-CMD ["/bin/bash"]
+# modify for quick turn-around
+ADD scripts/run_workflow.pl /roddy/bin/run_workflow.pl
+CMD ["/bin/bash", "/start.sh"]

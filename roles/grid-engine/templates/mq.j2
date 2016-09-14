@@ -1,0 +1,4 @@
+#!/bin/sh
+sleep 1
+perl -pi -e 's/^load_thresholds.*$/load_thresholds np_load_avg={{ ansible_processor_vcpus }}/' $1
+perl -pi -e 's/^slots.*$/slots {{ ansible_processor_vcpus }}{% for host in groups['all_groups'] %},[{{ host }}={{ ansible_processor_vcpus }}] {% endfor %}/' $1

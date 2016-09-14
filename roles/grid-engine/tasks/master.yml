@@ -1,0 +1,150 @@
+---
+# file: roles/grid-engine/tasks/master.yml
+- name: SGE | Install apt-utils
+  apt: pkg=apt-utils state=present update_cache=yes cache_valid_time=3600
+
+- name: SGE | Install gridengine-master 
+  apt: pkg=gridengine-master state=present update_cache=yes cache_valid_time=3600
+
+- name: SGE | Template act_qmaster
+  template: src=act_qmaster.j2 dest=/var/lib/gridengine/default/common/act_qmaster
+  when: docker is not defined
+
+- name: SGE | Ensure gridengine-master restarted 
+  service: name=gridengine-master state=restarted
+
+- name: SGE | Configure master
+  command: qconf -as {{ inventory_hostname }}
+  register: configure_master_as
+  changed_when: not 'already exists' in configure_master_as.stderr
+  when: docker is not defined
+  
+- name: SGE | Make a directory for our SGE templates
+  file: state=directory path=/etc/gridengine/templates mode=0744
+  when: docker is not defined
+  
+# setup memory as a consumable resource
+- name: SGE | Template memory configuration file
+  template: src=sc.j2 dest=/etc/gridengine/templates/sge_sc
+  register: memory_template
+  when: docker is not defined
+  
+- name: SGE | Setup memory as consumable resource
+  command: qconf -Mc /etc/gridengine/templates/sge_sc
+  when: memory_template.changed
+  register: memory_consumable
+  changed_when: not 'Complex attribute configuration has not been changed' in memory_consumable.stderr
+
+# Be careful when adding the user. First get he current list, and only add if it isn't
+# already present.
+- name: SGE | Check current user list
+  shell: qconf -su users | grep -E "^entries" | cut -f2 -d " "
+  register: sge_current_users
+  changed_when: false
+  when: docker is not defined
+
+- name: SGE | Add the roddy user
+  command: qconf -au roddy users
+  when: docker is not defined and not 'roddy' in sge_current_users.stdout.split(',') 
+  
+# loop through and template worker hosts
+- name: SGE | Generate execution host templates
+  template: src=execution_host.j2 dest=/etc/gridengine/templates/sge_execution_host_{{ item }}.sh mode=0555
+  when: not single_node and docker is not defined
+  with_items: groups.worker
+  register: execution_host_template
+
+# loop through and setup worker hosts, if this was better it would modify existing hosts as well instead of ignoring errors
+- name: SGE | Add worker hosts as execution hosts
+  shell: export EDITOR=/etc/gridengine/templates/sge_execution_host_{{ item }}.sh && qconf -ae ; qconf -me {{ item }}
+  with_items: groups.worker
+  when: execution_host_template.changed
+  ignore_errors: yes
+  
+  # add the master as an execution host if we only have one node
+- name: SGE | Single node execution host templates
+  template: src=execution_selfhost.j2 dest=/etc/gridengine/templates/sge_execution_host_master.sh mode=0555
+  register: execution_host_template
+  when: single_node and docker is not defined
+
+- name: SGE | Single node host as execution host
+  shell: export EDITOR=/etc/gridengine/templates/sge_execution_host_master.sh && qconf -ae ; qconf -me {{ inventory_hostname }}
+  when: execution_host_template.changed
+  ignore_errors: yes
+
+- name: SGE | delete current queues
+  command: qconf -dq main.q
+
+- name: SGE | delete current hostlist
+  command: qconf -dhgrp @allhosts
+
+- name: SGE | delete current environment 
+  command: qconf -dp serial
+
+
+# Again, we don't want to do this if it already exists, never counts as a change registering variables
+- name: SGE | Check current host groups
+  command: qconf -shgrpl
+  ignore_errors: yes
+  register: sge_current_host_groups
+  changed_when: false
+  when: docker is not defined
+
+# The template now handles the hostlist properly
+- name: SGE | Template host group configuration
+  template: src=ahgrp.j2 dest=/etc/gridengine/templates/sge_ahgrp
+  when: docker is not defined and not '@allhosts' in sge_current_host_groups.stdout_lines 
+
+- name: SGE | Add the host group configuration
+  command: qconf -Ahgrp /etc/gridengine/templates/sge_ahgrp
+  when: docker is not defined and not '@allhosts' in sge_current_host_groups.stdout_lines
+
+# Again, we don't want to do this if it already exists
+- name: SGE | Check current queues
+  command: qconf -sql
+  ignore_errors: yes
+  register: sge_current_queues
+  changed_when: false
+  when: docker is not defined
+
+# template handles hostlist, worker queue slots, target load average
+- name: SGE | Template main queue
+  template: src=aq.j2 dest=/etc/gridengine/templates/sge_aq
+  register: main_queue_template
+  when: docker is not defined
+
+- name: SGE | Add main queue
+  command: qconf -Aq /etc/gridengine/templates/sge_aq
+  when: docker is not defined and not 'main.q' in sge_current_queues.stdout_lines
+
+- name: SGE | Template modify queue
+  template: src=mq.j2 dest=/etc/gridengine/templates/sge_mq.sh mode=0555
+  register: modify_main_queue_template
+  when: docker is not defined
+
+- name: SGE | Modify main queue
+  shell: export EDITOR=/etc/gridengine/templates/sge_mq.sh && qconf -mq main.q 
+  when: modify_main_queue_template.changed
+
+- name: SGE | Check parallel environment status
+  command: qconf -sp serial
+  ignore_errors: yes
+  when: grid_engine_master == True and docker is not defined
+  register: sge_parallel_env
+  changed_when: false  
+
+- name: SGE | Template serial parallel environment file
+  template: src=serial_profile.j2 dest=/etc/gridengine/templates/sge_serial_profile
+  register: serial_profile
+  when: docker is not defined
+  
+# Again, if this was better, we would re-create the environment if there were changes in the template
+#- qconf -Ap /etc/gridengine/templates/sge_serial_profile
+- name: SGE | Setup serial profile environment
+  command: "{{ item }}"
+  with_items:
+      - qconf -Ap /etc/gridengine/templates/sge_serial_profile
+      - qconf -aattr queue pe_list serial main.q
+  when:  "docker is not defined and 'serial is not a parallel environment' in sge_parallel_env.stderr or docker is not defined and serial_profile.changed"
+
+# TODO: bindle 1.2.1 re-runs the sge setup script on reboot. Determine whether this is really needed

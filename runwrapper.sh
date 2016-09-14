@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 sudo bash ~/sgeResetup.sh
 

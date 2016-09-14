@@ -1,0 +1,16 @@
+---
+# file: roles/grid-engine/tasks/worker.yml
+- name:  SGE | Setup worker act_qmaster line
+  lineinfile: 
+    line: '{{ inventory_hostname }}'
+    dest: /var/lib/gridengine/default/common/act_qmaster
+    state: present
+    create: yes
+  register: worker_setup
+  
+- name:  SGE | Restart worker when setup changed
+  service: name=gridengine-exec state=restarted
+  when: worker_setup.changed
+  
+- name:  SGE | Ensure worker is started in general
+  service: name=gridengine-exec state=started pattern=/usr/lib/gridengine/sge_execd

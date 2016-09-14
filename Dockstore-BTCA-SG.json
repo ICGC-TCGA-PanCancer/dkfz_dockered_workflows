@@ -2,12 +2,12 @@
   "run-id": "run_id",
   "tumor-bam":
   {
-    "path":"/media/large_volume/CGP-Somatic-Docker-input/HCC1143_ds/HCC1143_ds/HCC1143.bam",
+    "path":"/home/ubuntu/download/d080db6b-583b-46fe-9e2b-b70069ebe960/a51ad19bf9dcf4819371740c732bcba0.bam",
     "class":"File"
   },
   "normal-bam":
   {
-    "path":"/media/large_volume/CGP-Somatic-Docker-input/HCC1143_ds/HCC1143_ds/HCC1143_BL.bam",
+    "path":"/home/ubuntu/download/34d42b18-1717-4720-a487-4459165c6782/3a62b4250f4c7227fd5283888f2b598e.bam",
     "class":"File"
   },
   "reference-gz":
@@ -17,7 +17,7 @@
   },
   "delly-bedpe":
   {
-    "path":"run_id.embl-delly_1-3-0-preFilter.20150318.somatic.sv.bedpe.txt",
+    "path":"run1_63/f0e0d978-3e32-4444-a07a-26049b2594e6.embl-delly_1-0-0-preFilter.20150805.somatic.sv.bedpe.txt",
     "class":"File"
   },
   "germline_indel_vcf_gz": {
@@ -53,3 +53,4 @@
     "class": "File"
   }
 }
+

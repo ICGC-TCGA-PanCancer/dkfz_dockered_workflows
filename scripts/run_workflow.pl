@@ -2,7 +2,6 @@
 
 use strict;
 use Getopt::Long;
-use Cwd;
 
 ########
 # ABOUT
@@ -13,7 +12,6 @@ use Cwd;
 
 my @files;
 my ($run_id, $normal_bam, $tumor_bam, $bedpe, $reference);
-my $cwd = cwd();
 
 # workflow version
 my $wfversion = "2.0.0";
@@ -31,6 +29,10 @@ GetOptions (
 # PARSE OPTIONS
 system("sudo chmod a+rwx /tmp");
 
+
+my $pwd = `pwd`;
+print "Present working directory is: $pwd\n";
+
 # SYMLINK REF FILES
 run("mkdir -p /data/datastore/normal");
 run("mkdir -p /data/datastore/tumor/");
@@ -42,8 +44,12 @@ run("samtools index /data/datastore/tumor/tumor.bam");
 run("ln -s $bedpe /data/datastore/delly/delly.bedpe.txt");
 run("mkdir -p /mnt/datastore/workflow_data/");
 run("mkdir -p \$TMPDIR/reference");
+# make sure we have permissions on these volumes
+run("sudo chmod -R a+wrx /reference");
 run("cd \$TMPDIR/reference && tar zxf $reference");
 run("mkdir -p /mnt/datastore/ && ln -s \$TMPDIR/reference/bundledFiles /mnt/datastore/");
+run("sudo chmod -R a+wrx /mnt/datastore /data/datastore");
+run("mkdir -p /mnt/datastore/resultdata");
 
 # MAKE CONFIG
 # the default config is the workflow_local.ini and has most configs ready to go
@@ -66,8 +72,12 @@ close OUT;
 # NOW RUN WORKFLOW
 my $error = system("/bin/bash -c '/roddy/bin/runwrapper.sh'");
 
-# MOVE THESE TO THE RIGHT PLACE
-system("mv /mnt/datastore/resultdata/* $cwd");
+# MOVE THESE TO THE RIGHT PLACE FOR PROVISION OUT
+my $outputDir = "/var/spool/cwl";
+system("mv /mnt/datastore/resultdata/* $outputDir");
+my $resultData = `ls $outputDir`;
+print "Result directory listing is: $resultData\n";
+
 
 # RETURN RESULT
 exit($error);
