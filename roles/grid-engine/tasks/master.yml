@@ -13,6 +13,9 @@
 - name: SGE | Ensure gridengine-master restarted 
   service: name=gridengine-master state=restarted
 
+- name: SGE | Ensure gridengine-master is started and enabled
+  service: name=gridengine-master state=started enabled=yes
+
 - name: SGE | Configure master
   command: qconf -as {{ inventory_hostname }}
   register: configure_master_as
