@@ -5,6 +5,7 @@ set -x
 
 # kick off all services
 HOSTNAME=`hostname`
+gosu root chmod a+wrx /etc
 gosu root chmod a+wrx /tmp
 gosu root chmod a+wrx /var/spool/cwl
 export TMPDIR=/tmp
