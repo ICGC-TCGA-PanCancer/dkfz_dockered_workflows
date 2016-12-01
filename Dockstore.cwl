@@ -14,7 +14,7 @@ dct:contributor:
 
 requirements:
 - class: DockerRequirement
-  dockerPull: quay.io/pancancer/pcawg-dkfz-workflow:feature_gosu_retrofit
+  dockerPull: quay.io/pancancer/pcawg-dkfz-workflow:2.0.1_cwl1.0
 
 inputs:
   run-id:

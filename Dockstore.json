@@ -2,12 +2,12 @@
   "run-id": "run_id",
   "tumor-bam":
   {
-    "path":"/media/large_volume/CGP-Somatic-Docker-input/HCC1143_ds/HCC1143_ds/HCC1143.bam",
+    "path":"https://dcc.icgc.org/api/v1/download?fn=/PCAWG/reference_data/data_for_testing/HCC1143_ds/HCC1143.bam",
     "class":"File"
   },
   "normal-bam":
   {
-    "path":"/media/large_volume/CGP-Somatic-Docker-input/HCC1143_ds/HCC1143_ds/HCC1143_BL.bam",
+    "path":"https://dcc.icgc.org/api/v1/download?fn=/PCAWG/reference_data/data_for_testing/HCC1143_ds/HCC1143_BL.bam",
     "class":"File"
   },
   "reference-gz":
@@ -17,7 +17,7 @@
   },
   "delly-bedpe":
   {
-    "path":"run_id.embl-delly_1-3-0-preFilter.20150318.somatic.sv.bedpe.txt",
+    "path":"https://raw.githubusercontent.com/ICGC-TCGA-PanCancer/dkfz_dockered_workflows/2.0.0_cwl1.0/run_id.embl-delly_1-3-0-preFilter.20150318.somatic.sv.bedpe.txt",
     "class":"File"
   },
   "germline_indel_vcf_gz": {
