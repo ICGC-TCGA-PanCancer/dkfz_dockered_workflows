@@ -5,13 +5,15 @@ set -x
 
 # kick off all services
 HOSTNAME=`hostname`
-echo $HOSTNAME
-sudo sed -i 's/placeholder/'$HOSTNAME'/g' /etc/ansible/hosts
+gosu root chmod a+wrx /etc
+gosu root chmod a+wrx /tmp
+gosu root chmod a+wrx /var/spool/cwl
+export TMPDIR=/tmp
+export HOME=/var/spool/cwl
+gosu root sed -i 's/placeholder/'$HOSTNAME'/g' /etc/ansible/hosts
 cat /etc/ansible/hosts
-sudo chmod -R a+wrx /root
-ansible-playbook /root/docker-start.yml -c local
-#cd ~seqware
-#source ~seqware/.bash_profile
-#source ~seqware/.bashrc 
-#sudo -E -u seqware -i /bin/bash -c "${1-bash}"
-sudo -E -u roddy -i /bin/bash -c "$*"
+gosu root chmod -R a+wrx /root
+gosu root ansible-playbook /root/docker-start.yml -c local
+gosu roddy /bin/bash -c "$*"
+#allow cwltool to pick up the results created by seqware
+gosu root chmod -R a+wrx  /var/spool/cwl
