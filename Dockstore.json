@@ -12,7 +12,7 @@
   },
   "reference-gz":
   {
-    "path": "/media/large_volume/dkfz_dockered_dependencies/dkfz-workflow-dependencies_150318_0951.tar.gz",
+    "path": "https://dcc.icgc.org/api/v1/download?fn=/PCAWG/reference_data/pcawg-dkfz/dkfz-workflow-dependencies_150318_0951.tar.gz",
     "class": "File"
   },
   "delly-bedpe":
