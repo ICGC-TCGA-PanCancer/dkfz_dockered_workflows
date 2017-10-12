@@ -25,7 +25,7 @@ Successful testing was completed with the following command.
 
 Warning: Execution can take upwards of 2 hours for execution with the test data (listed in Dockstore.json). However, this workflow will *crash hard* near the end, meaning that the test data can only be used to see if the workflow kicks off successfully), see [#7](https://github.com/ICGC-TCGA-PanCancer/dkfz_dockered_workflows/issues/7). This data can be downloaded and uncompressed from https://s3-eu-west-1.amazonaws.com/wtsi-pancancer/testdata/HCC1143_ds.tar
 
-`Dockstore-BTCA-SG.json` will execute to completion but will take a more substantial amount of time to execute (on the order of 1 day on a 8-core, 58GB of RAM host). Note that the `BTCA-SG` code corresponds to a pan-cancer donor. You will need GNOS access with ICGC priviledges to access this protected data. Additionally the output location should exist and be writeable by the executing user.
+`Dockstore-BTCA-SG.json` will execute to completion but will take a more substantial amount of time to execute (on the order of 1 day on a 8-core, 58GB of RAM host.  It may fail if the host has less than 8 cores). Note that the `BTCA-SG` code corresponds to a pan-cancer donor. You will need GNOS access with ICGC priviledges to access this protected data. Additionally the output location should exist and be writeable by the executing user.
 
 In either case, the DKFZ dependency bundle can be downloaded from https://gtrepo-dkfz.annailabs.com/cghub/data/analysis/download/32749c9f-d8aa-4ff5-b32c-296976aec706 also using valid GNOS credentials and gtdownload. 
 
