@@ -27,6 +27,11 @@ Warning: Execution can take upwards of 2 hours for execution with the test data 
 
 `Dockstore-BTCA-SG.json` will execute to completion but will take a more substantial amount of time to execute (on the order of 1 day on a 8-core, 58GB of RAM host.  It may fail if the host has less than 8 cores). Note that the `BTCA-SG` code corresponds to a pan-cancer donor. You will need GNOS access with ICGC priviledges to access this protected data. Additionally the output location should exist and be writeable by the executing user.
 
+Last success tested with the following hardware:
+VCPU: 38
+RAM: 244.1 GB
+Disk Space: 5.3 TB
+
 In either case, the DKFZ dependency bundle can be downloaded from https://gtrepo-dkfz.annailabs.com/cghub/data/analysis/download/32749c9f-d8aa-4ff5-b32c-296976aec706 also using valid GNOS credentials and gtdownload. 
 
 ## Developers - Building the Image
