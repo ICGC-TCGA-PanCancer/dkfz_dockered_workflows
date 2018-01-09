@@ -12,13 +12,13 @@ RUN apt-get update; \
     apt-get -y install tabix procmail zip subversion make cpanminus python-dev python-pip libgfortran3 libglu1-mesa-dev alien wget libfreetype6 libfreetype6-dev libpng-dev libcurl4-openssl-dev
 RUN cpanm Math::CDF; \
     cpanm XML::XPath; \
- pip install pysam==0.8.0; \
- pip install pycairo; \
- pip install numpy==1.7.0; \
- pip install python-dateutil; \
- easy_install matplotlib==1.1.0; \
- pip install Biopython==1.57; \
- pip install scipy==0.12.0; \
+ pip install -i https://pypi.python.org/simple/ pysam==0.8.0; \
+ pip install -i https://pypi.python.org/simple/ pycairo; \
+ pip install -i https://pypi.python.org/simple/ numpy==1.7.0; \
+ pip install -i https://pypi.python.org/simple/ python-dateutil; \
+ easy_install -i https://pypi.python.org/simple/ matplotlib==1.1.0; \
+ pip install -i https://pypi.python.org/simple/ Biopython==1.57; \
+ pip install -i https://pypi.python.org/simple/ scipy==0.12.0; \
     wget http://ftp.hosteurope.de/mirror/ftp.opensuse.org/distribution/12.2/repo/oss/suse/x86_64/libpng14-14-1.4.11-2.5.1.x86_64.rpm; \
     alien -i libpng14-14-1.4.11-2.5.1.x86_64.rpm; \
     ln --symbolic /usr/lib64/libpng14.so.14 /usr/lib/libpng14.so.14;
@@ -65,21 +65,21 @@ RUN mkdir /roddy/bin
 
 RUN apt-get update; easy_install Atlas; apt-get -y install libatlas-base-dev gfortran;
 
-RUN easy_install scipy==0.12.0
+RUN easy_install -i https://pypi.python.org/simple/ scipy==0.12.0
 
 RUN apt-get update; apt-get -y install libcairo2 libjpeg-dev ghostscript
 
 RUN easy_install -U 'distribute'; \
-    pip install pysam==0.6; \
-    easy_install matplotlib==1.0.1;
+    pip install -i https://pypi.python.org/simple/ pysam==0.6; \
+    easy_install -i https://pypi.python.org/simple/ matplotlib==1.0.1;
 
 ADD scripts/sgeResetup.sh /roddy/sgeResetup.sh
 
 #ADD Roddy /roddy/bin/Roddy
 # now getting Roddy binary from a public URL since authors indicated this is fine
-RUN wget --quiet https://s3.amazonaws.com/pan-cancer-data/workflow-data/DKFZPancancer/Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
+RUN wget --quiet https://dcc.icgc.org/api/v1/download?fn=/PCAWG/reference_data/pcawg-dkfz/Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
     tar zxf Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
-    mv Roddy /roddy/bin/
+mv Roddy /roddy/bin/
 
 #ADD RoddyWorkflows /roddy/bin/RoddyWorkflows
 
