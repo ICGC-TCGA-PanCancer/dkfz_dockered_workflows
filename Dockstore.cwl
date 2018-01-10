@@ -16,6 +16,8 @@ requirements:
 - class: DockerRequirement
   dockerPull: quay.io/pancancer/pcawg-dkfz-workflow:2.0.1_cwl1.0
 
+cwlVersion: v1.0
+
 inputs:
   run-id:
     type: string
@@ -40,7 +42,7 @@ inputs:
   delly-bedpe:
     type: File
     inputBinding:
-      position: 5 
+      position: 5
       prefix: --delly-bedpe
 
 outputs:
@@ -79,43 +81,56 @@ outputs:
 
 baseCommand: [/start.sh, perl, /roddy/bin/run_workflow.pl]
 doc: |
-  PCAWG DKFZ variant calling workflow is developed by German Cancer Research Center (DKFZ, [https://www.dkfz.de](https://www.dkfz.de)), it consists of software components calling somatic substitutions, indels and copy number variations using uniformly aligned tumor / normal WGS sequences. The workflow has been dockerized and packaged using CWL workflow language, the source code is available on GitHub at: [https://github.com/ICGC-TCGA-PanCancer/dkfz_dockered_workflows](https://github.com/ICGC-TCGA-PanCancer/dkfz_dockered_workflows). The workflow is also registered in Dockstore at: [https://dockstore.org/containers/quay.io/pancancer/pcawg-dkfz-workflow](https://dockstore.org/containers/quay.io/pancancer/pcawg-dkfz-workflow).
+    PCAWG DKFZ variant calling workflow is developed by German Cancer Research Center
+    (DKFZ, https://www.dkfz.de), it consists of software components calling somatic substitutions, indels
+    and copy number variations using uniformly aligned tumor / normal WGS sequences. The workflow has been
+    dockerized and packaged using CWL workflow language, the source code is available on
+    GitHub at: https://github.com/ICGC-TCGA-PanCancer/dkfz_dockered_workflows.
 
 
     ## Run the workflow with your own data
-    
+
     ### Prepare compute environment and install software packages
-    The workflow has been tested in Ubuntu 16.04 Linux environment with the following hardware and software settings.
-    
-    1. Hardware requirement (assuming X30 coverage whole genome sequence)
+    The workflow has been tested in Ubuntu 16.04 Linux environment with the following hardware and software
+    settings.
+
+    #### Hardware requirement (assuming 30X coverage whole genome sequence)
     - CPU core: 16
     - Memory: 64GB
     - Disk space: 1TB
-    
-    2. Software installation
+
+    #### Software installation
     - Docker (1.12.6): follow instructions to install Docker https://docs.docker.com/engine/installation
     - CWL tool
     ```
     pip install cwltool==1.0.20170217172322
     ```
-    
+
     ### Prepare input data
-    1. Input aligned tumor / normal BAM files
-    
-    The workflow uses a pair of aligned BAM files as input, one BAM for tumor, the other for normal, both from the same donor. Here we assume file names are `tumor_sample.bam` and `normal_sample.bam`, and both files are under `bams` subfolder.
-    
-    2. Dependent structural variant input file
-    This is a file produced by EMBL (aka DELLY) workflow. Please follow instruction [here](#!Synapse:syn2351328/wiki/506133) to run EMBL workflow.
-    
-    3. Reference data file
-    
-    The workflow also uses one precompiled reference files as input, they can be downloaded from the ICGC Data Portal at [https://dcc.icgc.org/releases/PCAWG/reference_data/pcawg-dkfz](https://dcc.icgc.org/releases/PCAWG/reference_data/pcawg-dkfz). We assume the reference file is under `reference` subfolder. 
-    
-    4. Job JSON file for CWL
-    
-    Finally, we need to prepare a JSON file with input, reference and output files specified. Please replace the `tumor` and `normal` parameters with your real BAM file names. Parameters for output are file name suffixes, usually don't need to be changed.
-    
-    Name the JSON file: `pcawg-dkfz-variant-caller.job.json`
+    #### Input aligned tumor / normal BAM files
+
+    The workflow uses a pair of aligned BAM files as input, one BAM for tumor, the other for normal,
+    both from the same donor. Here we assume file names are *tumor_sample.bam* and *normal_sample.bam*,
+    and are under *bams* subfolder.
+
+    #### Dependent structural variant file
+    This is a file produced by EMBL (aka DELLY) structural variation calling workflow. Please follow instruction
+    [here](https://dockstore.org/containers/quay.io/pancancer/pcawg_delly_workflow) to run EMBL workflow
+    to get the *run_id.embl-delly.somatic.sv.bedpe.txt* file.
+
+    #### Reference data file
+
+    The workflow also uses one precompiled reference file (*dkfz-workflow-dependencies_150318_0951.tar.gz*) as input,
+    they can be downloaded from the ICGC Data Portal under https://dcc.icgc.org/releases/PCAWG/reference_data/pcawg-dkfz.
+    We assume the reference file is under *reference* subfolder.
+
+    #### Job JSON file for CWL
+
+    Finally, we need to prepare a JSON file with input, reference and output files specified. Please replace
+    the *tumor* and *normal* parameters with your real BAM file names. Parameters for output are file name
+    suffixes, usually don't need to be changed.
+
+    Name the JSON file: *pcawg-dkfz-variant-caller.job.json*
     ```
     {
       "run-id": "run_id",
@@ -171,6 +186,17 @@ doc: |
     }
     ```
 
+    ### Run the workflow
+    #### Option 1: Run with CWL tool
+    - Download CWL workflow definition file
+    ```
+    wget -O pcawg-dkfz-variant-caller.cwl "https://github.com/ICGC-TCGA-PanCancer/dkfz_dockered_workflows/blob/2.0.2_cwl1.0/Dockstore.cwl"
+    ```
 
-cwlVersion: v1.0
+    - Run `cwltool` to execute the workflow
+    ```
+    nohup cwltool --debug --non-strict pcawg-dkfz-variant-caller.cwl pcawg-dkfz-variant-caller.job.json > pcawg-dkfz-variant-caller.log 2>&1 &
+    ```
 
+    #### Option 2: Run with the Dockstore CLI
+    See the *Launch with* section below for details.
