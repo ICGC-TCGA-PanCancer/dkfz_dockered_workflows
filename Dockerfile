@@ -65,19 +65,22 @@ RUN mkdir /roddy/bin
 
 RUN apt-get update; easy_install Atlas; apt-get -y install libatlas-base-dev gfortran;
 
-RUN easy_install scipy==0.12.0
+RUN pip install --upgrade --index-url=https://pypi.python.org/simple/ pip
+RUN pip install scipy==0.12.0
+
 
 RUN apt-get update; apt-get -y install libcairo2 libjpeg-dev ghostscript
 
 RUN easy_install -U 'distribute'; \
+    pip install numpy==1.7.0; \
     pip install pysam==0.6; \
-    easy_install matplotlib==1.0.1;
+    pip install matplotlib==1.0.1;
 
 ADD scripts/sgeResetup.sh /roddy/sgeResetup.sh
 
 #ADD Roddy /roddy/bin/Roddy
 # now getting Roddy binary from a public URL since authors indicated this is fine
-RUN wget --quiet https://s3.amazonaws.com/pan-cancer-data/workflow-data/DKFZPancancer/Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
+RUN wget --quiet -O Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz https://dcc.icgc.org/api/v1/download?fn=/PCAWG/pcawg_dkfz_caller/Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
     tar zxf Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz && \
     mv Roddy /roddy/bin/
 
