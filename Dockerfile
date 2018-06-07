@@ -65,7 +65,7 @@ RUN mkdir /roddy/bin
 
 RUN apt-get update; easy_install Atlas; apt-get -y install libatlas-base-dev gfortran;
 
-RUN pip install --upgrade --index-url=https://pypi.python.org/simple/ pip
+RUN pip install --index-url=https://pypi.python.org/simple/ pip==10.0.1
 RUN pip install scipy==0.12.0
 
 
