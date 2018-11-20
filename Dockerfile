@@ -166,5 +166,8 @@ VOLUME /var /etc /root /usr /reference /data /roddy /mnt
 # nested volumes, not sure why we need these but otherwise they end up read-only
 VOLUME /var/run/gridengine
 
+RUN mkdir /roddy/.roddy
+COPY jfxlibInfo /roddy/.roddy/
+
 
 CMD ["/bin/bash", "/start.sh"]
