@@ -68,6 +68,6 @@ It can be downloaded like this:
 
 ### Building
 
-Once you have the above `Roddy` directory moved to the `docker/dkfz_dockered_workflows` directory you can build the Docker image.  The data bundle is actually pulled into this container at runtime. The tag `1.3` below depends on the current release of this repo.
+Once you have the above `Roddy` directory moved to the `docker/dkfz_dockered_workflows` directory you can build the Docker image.  The data bundle is actually pulled into this container at runtime. The tag `2.0.5_cwl1.0` below depends on the current release of this repo.
 
-    docker build -t quay.io/pancancer/pcawg-dkfz-workflow:2.0.0 .
+    docker build -t quay.io/pancancer/pcawg-dkfz-workflow:2.0.5_cwl1.0 .
