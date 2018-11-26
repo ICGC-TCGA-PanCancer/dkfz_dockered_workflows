@@ -100,7 +100,10 @@ ADD scripts/combineJsons.py /roddy/bin/combineJsons.py
 
 ADD scripts/python_modules /roddy/bin/python_modules
 
-RUN cd /roddy/bin/Roddy/dist/runtimeDevel && ln -sf groovy* groovy && ln -sf jdk* jdk && ln -sf jdk/jre jre; \
+RUN cd /roddy/bin/Roddy/dist/runtimeDevel;
+    ln -sf groovy2.3.6 groovy; \
+    ln -sf jdk1.8.0_20 jdk; \
+    ln -sf jdk1.8.0_20/jre jre; \
     cd /roddy/bin/Roddy && cp applicationPropertiesAllLocal.ini applicationProperties.ini; \
     bash /roddy/sgeResetup.sh; \
     qconf -Mc /roddy/bin/sgeConfig.txt; \
