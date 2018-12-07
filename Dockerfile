@@ -1,4 +1,4 @@
-FROM ubuntu:precise 
+FROM ubuntu:precise
 MAINTAINER Michael Heinold @ DKFZ
 
 ENV HOSTNAME master
@@ -36,8 +36,8 @@ RUN export DEBIAN_FRONTEND=noninteractive; \
     /etc/init.d/gridengine-exec start;
 
 RUN useradd roddy -d /roddy
-    
-#RUN	
+
+#RUN
 RUN	echo `head -n 1 /etc/hosts | cut -f 1` master > /tmp/hostsTmp && tail -n +2 /etc/hosts >> /tmp/hostsTmp && cp /tmp/hostsTmp /etc/hosts && echo master > /etc/hostname; \
 	hostName=`hostname`; \
     export HOST=$hostName; \
@@ -136,7 +136,7 @@ ENV ANSIBLE_LIBRARY /ansible/library
 ENV PYTHONPATH /ansible/lib:$PYTHON_PATH
 
 # setup sge
-WORKDIR /root 
+WORKDIR /root
 COPY inventory /etc/ansible/hosts
 COPY roles /root/roles
 USER root
@@ -172,5 +172,7 @@ VOLUME /var/run/gridengine
 RUN mkdir /roddy/.roddy
 COPY jfxlibInfo /roddy/.roddy/
 
+RUN mkdir /roddy/.roddy/compressedAnalysisTools
+RUN chown -R roddy:roddy /roddy/.roddy/compressedAnalysisTools
 
 CMD ["/bin/bash", "/start.sh"]
