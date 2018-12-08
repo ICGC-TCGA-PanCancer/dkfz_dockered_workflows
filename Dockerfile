@@ -175,4 +175,8 @@ VOLUME /var/run/gridengine
 RUN mkdir /roddy/.roddy
 COPY jfxlibInfo /roddy/.roddy/
 
+<<<<<<< HEAD
+=======
+RUN mkdir -p /roddy/.roddy/compressedAnalysisTools
+>>>>>>> origin/develop
 CMD ["/bin/bash", "/start.sh"]
