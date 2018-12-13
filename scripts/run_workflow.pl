@@ -50,7 +50,7 @@ run("mkdir -p /mnt/datastore/workflow_data/");
 run("mkdir -p \$TMPDIR/reference");
 # make sure we have permissions on these volumes
 run("sudo chmod -R a+wrx /reference");
-run("cd \$TMPDIR/reference && rm -rf ./* && tar zxf $reference");
+run("cd \$TMPDIR/reference && sudo rm -rf \$TMPDIR/reference/* && tar zxf $reference");
 run("mkdir -p /mnt/datastore/ && ln -s \$TMPDIR/reference/bundledFiles /mnt/datastore/");
 run("sudo chmod -R a+wrx /mnt/datastore /data/datastore");
 run("mkdir -p /mnt/datastore/resultdata");
