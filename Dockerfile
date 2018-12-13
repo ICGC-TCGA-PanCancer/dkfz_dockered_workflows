@@ -110,6 +110,12 @@ RUN cd /roddy/bin/Roddy/dist/runtimeDevel; \
     mkdir -p /mnt/datastore/workflow_data; \
     mkdir /roddy/logs;
 
+# for local testing
+RUN cd /var/spool/cwl; \
+    ln -sf /roddy/.roddy;
+RUN cd /roddy/.roddy; \
+    ln -sf /roddy/bin/Roddy/dist/runtimeDevel;
+
 #ADD patches/projectsPanCancer.xml /roddy/bin/Roddy/dist/resources/configurationFiles/projectsPanCancer.xml
 
 #ADD patches/pscbs_plots_functions.R /roddy/bin/Roddy/dist/plugins/COWorkflows_1.0.131/resources/analysisTools/copyNumberEstimationWorkflow/psbcs_plots_functions.R
