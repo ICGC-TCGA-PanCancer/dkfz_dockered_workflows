@@ -71,9 +71,9 @@
         <cvalue name='SNP_SUFFIX' value='snp.tab.gz' type="string"/>
         <cvalue name='snp_min_coverage' value='5' type="integer"/>
 
-	<cvalue name='MALE_FAKE_CONTROL_PRE' value="/icgc/dkfzlsdf/analysis/mmml/whole_genome_pcawg/results_per_pid/4128477/ACEseq/cnv_snp/4128477.chr" type='path'/> 
-	<cvalue name='FEMALE_FAKE_CONTROL_PRE' value="/icgc/dkfzlsdf/analysis/mmml/whole_genome_pcawg/results_per_pid/4109142/ACEseq/cnv_snp/4109142.chr" type='path'/> 
-	<cvalue name='FAKE_CONTROL_POST' value=".cnv.anno.tab.gz" type='string'/> 
+	<cvalue name='MALE_FAKE_CONTROL_PRE' value="/icgc/dkfzlsdf/analysis/mmml/whole_genome_pcawg/results_per_pid/4128477/ACEseq/cnv_snp/4128477.chr" type='path'/>
+	<cvalue name='FEMALE_FAKE_CONTROL_PRE' value="/icgc/dkfzlsdf/analysis/mmml/whole_genome_pcawg/results_per_pid/4109142/ACEseq/cnv_snp/4109142.chr" type='path'/>
+	<cvalue name='FAKE_CONTROL_POST' value=".cnv.anno.tab.gz" type='string'/>
 
         <!--annotateCnvFiles Opts-->
         <cvalue name='VCF_SUFFIX' value='cnv.anno.tab.gz' type="string"/>
@@ -128,7 +128,7 @@
 
         <!--estimatePurityPloidy Opts-->
         <cvalue name='min_length_purity' value='1000000' type="integer"/>
-        <cvalue name='min_hetSNPs_purity' value='500' type="integer"/>
+        <cvalue name='min_hetSNPs_purity' value='50' type="integer"/>
         <cvalue name='dh_stop' value='max' type="string"/>
         <cvalue name='min_length_dh_stop' value='1000000' type="integer"/>
         <cvalue name='dh_zero' value='no' type="string"/>
@@ -220,7 +220,7 @@
 	     <input type="file" typeof="de.dkfz.b080.co.files.TextFile" scriptparameter="FILENAME_SEX"/>
              <output type="file" typeof="de.dkfz.b080.co.files.TextFile" scriptparameter="FILENAME_CHECKPOINT_FAKECONTROL"/>
         </tool>
-   
+
         <tool name="mergeAndFilterSnpFiles" value="snvMergeFilter.sh" basepath="copyNumberEstimationWorkflow">
             <resourcesets>
                 <rset size="l" memory="0.2" cores="2" nodes="1" walltime="5"/>
