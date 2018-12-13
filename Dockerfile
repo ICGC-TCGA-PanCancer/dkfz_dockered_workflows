@@ -74,7 +74,8 @@ RUN apt-get update; apt-get -y install libcairo2 libjpeg-dev ghostscript
 RUN easy_install -U 'distribute'; \
     pip install numpy==1.7.0; \
     pip install pysam==0.8.0; \
-    pip install matplotlib==1.0.1;
+    pip install matplotlib==1.0.1; \
+    pip install Biopython==1.57;
 
 ADD scripts/sgeResetup.sh /roddy/sgeResetup.sh
 
