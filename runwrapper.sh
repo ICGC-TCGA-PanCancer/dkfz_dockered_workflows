@@ -34,7 +34,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	ln -sf $dellyfile ${dellyFolder}/${pid}.DELLY.somaticFilter.highConf.bedpe.txt
 
 	touch $alignmentFolder/tumor_${pid}_merged.mdup.bam
-	touch $alignmentFolder/control_${pid}_merged.mdup.bam 
+	touch $alignmentFolder/control_${pid}_merged.mdup.bam
 	touch $alignmentFolder/tumor_${pid}_merged.mdup.bam.bai
 	touch $alignmentFolder/control_${pid}_merged.mdup.bam.bai
 
@@ -73,10 +73,10 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	echo "Wait for Roddy jobs to finish"
 	# Roddy's built-in wait does not work reliable in docker images...
-	while [[ `qstat -t | wc -l` > 2 ]]; do
+	while [[ `qstat -t | wc -l` -gt 2 ]]; do
 			sleep 60
 	done
-	
+
 	echo "Check job state logfiles"
 	# Now check all the job state logfiles from the last three entries in the result folder.
 	# Only take the last directory of every workflow.
@@ -90,11 +90,11 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 		[[ $cntErrornous -gt 0 ]] && failed=true && echo "Errors found for jobs in $logfile"
 		[[ $cntErrornous == 0 ]] && echo "No errors found for $logfile"
 	done
-	
+
 	[[ $failed == true ]] && echo "There was at least one error in a job status logfile. Will exit now!" && exit 5
 
 	# From now on, ignore any errors and return 0!
-	
+
 	# Collect files and write them to the output folder
 
 	# Collect the log files
@@ -166,18 +166,18 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	SOMSNVFINAL=`zcat ${snvVCFSomaticFile} | grep -v "#" | grep -w PASS | wc -l`
 	SOMSNVALL=`zcat ${snvVCFSomaticFile} | grep -v "#" | wc -l`
 	GERSNVLIKELY=`zcat ${snvVCFGermlineFile} | grep -v "#" | grep -w PASS | wc -l`
-	
+
 	echo -e "all_somatic\tcaller\tlikely_germline\tpassed_somatic\tsomatic_unfiltered\n${SOMSNVALL}\tmpileup_DKFZ\t${GERSNVLIKELY}\t${SOMSNVFINAL}\t${SOMSNVPREFILTER}" > ${snvJsonTabTempFile}
 	python /roddy/bin/convertTabToJson.py -k snv_mnv -f ${snvJsonTabTempFile} -i ${pid} -o ${snvJsonFile} && rm ${snvJsonTabTempFile}
-	
+
 	echo "Create INDEL json file"
 	SOMINDELFINAL=`zcat ${indelVCFSomaticFile} | grep -v "#" | grep -w PASS | wc -l`
 	SOMINDELALL=`zcat ${indelVCFSomaticFile} | grep -v "#" | wc -l`
 	GERINDELLIKELY=`zcat ${indelVCFGermlineFile} | grep -v "#" | grep -w PASS | wc -l`
-	
+
 	echo -e "all_somatic\tcaller\tlikely_germline\tpassed_somatic\n${SOMINDELALL}\tPlatypus_DKFZ\t${GERINDELLIKELY}\t${SOMINDELFINAL}" > ${indelJsonTabTempFile}
 	python /roddy/bin/convertTabToJson.py -k indel -f ${indelJsonTabTempFile} -i ${pid} -o ${indelJsonFile} && rm ${indelJsonTabTempFile}
-	
+
 	python /roddy/bin/combineJsons.py -c ${resultFolder}/${prefixACESeq}.cnv.json -s ${snvJsonFile} -i ${indelJsonFile} -g ${resultFolder}/${prefixACESeq}.cnv.gcbias.json -o ${resultFolder}/${pid}.qc_metrics.dkfz.json -t ${pid}
 	tabix -p vcf ${aceSeqVCFFile}
 
@@ -204,5 +204,5 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 done
 
-# Always do that? 
+# Always do that?
 echo 0
