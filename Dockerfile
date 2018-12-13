@@ -168,9 +168,6 @@ ADD scripts/run_workflow.pl /roddy/bin/run_workflow.pl
 RUN mkdir -p /roddy/.roddy/compressedAnalysisTools
 RUN chown roddy:roddy /roddy/.roddy/compressedAnalysisTools
 
-# for local testing
-RUN cd /var/spool/cwl; \
-    ln -sf /roddy/.roddy;
 RUN cd /roddy/.roddy; \
     ln -sf /roddy/bin/Roddy/dist/runtimeDevel;
 
