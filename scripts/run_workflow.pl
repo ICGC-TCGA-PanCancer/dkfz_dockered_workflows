@@ -41,17 +41,17 @@ run("env");
 run("mkdir -p /data/datastore/normal");
 run("mkdir -p /data/datastore/tumor/");
 run("mkdir -p /data/datastore/delly/");
-run("ln -s $normal_bam /data/datastore/normal/normal.bam");
-run("samtools index /data/datastore/normal/normal.bam");
-run("ln -s $tumor_bam /data/datastore/tumor/tumor.bam");
-run("samtools index /data/datastore/tumor/tumor.bam");
-run("ln -s $bedpe /data/datastore/delly/delly.bedpe.txt");
+run("ln -sf $normal_bam /data/datastore/normal/normal.bam");
+run("ln -sf ${normal_bam}.bai /data/datastore/normal/normal.bam.bai");
+run("ln -sf $tumor_bam /data/datastore/tumor/tumor.bam");
+run("ln -sf ${tumor_bam}.bai /data/datastore/tumor/tumor.bam.bai");
+run("ln -sf $bedpe /data/datastore/delly/delly.bedpe.txt");
 run("mkdir -p /mnt/datastore/workflow_data/");
 run("mkdir -p \$TMPDIR/reference");
 # make sure we have permissions on these volumes
 run("sudo chmod -R a+wrx /reference");
 run("cd \$TMPDIR/reference && tar zxf $reference");
-run("mkdir -p /mnt/datastore/ && ln -s \$TMPDIR/reference/bundledFiles /mnt/datastore/");
+run("mkdir -p /mnt/datastore/ && ln -sf \$TMPDIR/reference/bundledFiles /mnt/datastore/");
 run("sudo chmod -R a+wrx /mnt/datastore /data/datastore");
 run("mkdir -p /mnt/datastore/resultdata");
 
