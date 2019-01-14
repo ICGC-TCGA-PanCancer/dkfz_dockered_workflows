@@ -3,7 +3,6 @@ MAINTAINER Michael Heinold @ DKFZ
 
 ENV HOSTNAME master
 
-#RUN echo '127.0.0.1 master' | cat - /etc/hosts > /tmp/tmp_host && cp /tmp/tmp_host /etc/hosts
 # install the dependencies
 RUN apt-get update && apt-get install -y \
     alien \
@@ -39,22 +38,17 @@ RUN apt-get update && apt-get install -y \
     && mkdir -p /data/datastore/ /data/binaries/ \
     && chmod 777 /data/datastore /data/binaries
 
-
+# install perl modules
 RUN cpanm Math::CDF
-#RUN cpanm XML::XPath
 
+# install python modules
 RUN pip install --index-url https://pypi.python.org/simple/ --upgrade pip && hash -r
 RUN pip install pysam==0.8.0 \
-#    && pip install pycairo \
     && pip install numpy==1.7.0 \
     && pip install python-dateutil \
     && pip install matplotlib==1.0.1 \
     && pip install Biopython==1.57 \
     && pip install scipy==0.12.0
-#    && wget http://ftp.hosteurope.de/mirror/ftp.opensuse.org/distribution/12.2/repo/oss/suse/x86_64/libpng14-14-1.4.11-2.5.1.x86_64.rpm \
-#    && alien -i libpng14-14-1.4.11-2.5.1.x86_64.rpm \
-#    && ln --symbolic /usr/lib64/libpng14.so.14 /usr/lib/libpng14.so.14
-
 
 #Grid engine setup - This is taken from the pancancer setup for SGE clusters.
 RUN export DEBIAN_FRONTEND=noninteractive \
@@ -107,19 +101,6 @@ RUN echo `head -n 1 /etc/hosts | cut -f 1` master > /tmp/hostsTmp \
 
 RUN mkdir /roddy/bin
 
-#RUN apt-get update; easy_install Atlas; apt-get -y install libatlas-base-dev gfortran;
-
-#RUN pip install --index-url=https://pypi.python.org/simple/ pip==10.0.1
-#RUN pip install scipy==0.12.0
-
-
-#RUN apt-get update; apt-get -y install libcairo2 libjpeg-dev ghostscript
-
-#RUN easy_install -U 'distribute'; \
-#    pip install numpy==1.7.0; \
-#    pip install pysam==0.6; \
-#    pip install matplotlib==1.0.1;
-
 COPY scripts/sgeResetup.sh /roddy/sgeResetup.sh
 
 # now getting Roddy binary from a public URL since authors indicated this is fine
@@ -153,12 +134,6 @@ RUN cd /roddy/bin/Roddy/dist/runtimeDevel \
     && mkdir -p /mnt/datastore/workflow_data \
     && mkdir /roddy/logs
 
-#ADD patches/projectsPanCancer.xml /roddy/bin/Roddy/dist/resources/configurationFiles/projectsPanCancer.xml
-
-#ADD patches/pscbs_plots_functions.R /roddy/bin/Roddy/dist/plugins/COWorkflows_1.0.131/resources/analysisTools/copyNumberEstimationWorkflow/psbcs_plots_functions.R
-
-#ADD patches/filterVcfForBias.py /roddy/bin/Roddy/dist/plugins/COWorkflows_1.0.131/resources/analysisTools/snvPipeline/filterVcfForBias.py
-
 COPY patches/analysisCopyNumberEstimation.xml /roddy/bin/Roddy/dist/plugins/CopyNumberEstimationWorkflow_1.0.189/resources/configurationFiles/analysisCopyNumberEstimation.xml
 
 RUN chown -R roddy:roddy /tmp/* \
@@ -167,13 +142,10 @@ RUN chown -R roddy:roddy /tmp/* \
 
 RUN adduser roddy sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-#    && echo '127.0.0.1  master' >> /etc/hosts
 
 # use ansible to create our dockerfile, see http://www.ansible.com/2014/02/12/installing-and-building-docker-with-ansible
 RUN mkdir /ansible
 WORKDIR /ansible
-#RUN apt-get -y update \
-#   apt-get install -y samtools python-apt python-yaml python-jinja2 git wget sudo;\
 
 # get a specific version of ansible , add sudo to seqware, create a working directory
 RUN git clone http://github.com/ansible/ansible.git /ansible \
@@ -208,16 +180,9 @@ RUN set -x \
     && chmod +s /usr/local/bin/gosu \
     && chmod a+rx /start.sh
 
-# modify for quick turn-around
-#ADD scripts/run_workflow.pl /roddy/bin/run_workflow.pl
-
 # needed for starting up the container
 VOLUME /var /etc /root /usr /reference /data /roddy /mnt
 # nested volumes, not sure why we need these but otherwise they end up read-only
 VOLUME /var/run/gridengine
-
-#RUN mkdir /roddy/.roddy
-#COPY jfxlibInfo /roddy/.roddy/
-
 
 CMD ["/bin/bash", "/start.sh"]
