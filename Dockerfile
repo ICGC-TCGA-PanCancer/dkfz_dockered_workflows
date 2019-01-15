@@ -34,9 +34,7 @@ RUN apt-get update && apt-get install -y \
     vim \
     wget \
     zip \
-    && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /data/datastore/ /data/binaries/ \
-    && chmod 777 /data/datastore /data/binaries
+    && rm -rf /var/lib/apt/lists/*
 
 # install perl modules
 RUN cpanm Math::CDF
@@ -49,6 +47,38 @@ RUN pip install pysam==0.8.0 \
     && pip install matplotlib==1.0.1 \
     && pip install Biopython==1.57 \
     && pip install scipy==0.12.0
+
+# add user
+RUN useradd roddy -d /roddy
+RUN adduser roddy sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+# copy files
+COPY scripts/sgeResetup.sh /roddy/sgeResetup.sh
+
+COPY scripts/sgeInit.sh /roddy/sgeInit.sh
+
+COPY runwrapper.sh /roddy/bin/runwrapper.sh
+
+COPY scripts/run_workflow.pl /roddy/bin/run_workflow.pl
+
+COPY scripts/getFinalCNEFile.py /roddy/bin/getFinalCNEFile.py
+
+COPY scripts/convertTabToJson.py /roddy/bin/convertTabToJson.py
+
+COPY scripts/setupSGE.sh /roddy/bin/sgeConfig.txt
+
+COPY scripts/combineJsons.py /roddy/bin/combineJsons.py
+
+COPY scripts/python_modules /roddy/bin/python_modules/
+
+# now getting Roddy binary from a public URL since authors indicated this is fine
+RUN wget --quiet -O Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz https://dcc.icgc.org/api/v1/download?fn=/PCAWG/pcawg_dkfz_caller/Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz \
+    && tar zxf Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz \
+    && mv Roddy /roddy/bin/
+
+COPY patches/analysisCopyNumberEstimation.xml /roddy/bin/Roddy/dist/plugins/CopyNumberEstimationWorkflow_1.0.189/resources/configurationFiles/analysisCopyNumberEstimation.xml
+
 
 #Grid engine setup - This is taken from the pancancer setup for SGE clusters.
 RUN export DEBIAN_FRONTEND=noninteractive \
@@ -66,62 +96,14 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && rm -rf /var/lib/apt/lists/* \
     && /etc/init.d/gridengine-exec stop \
     && /etc/init.d/gridengine-master restart \
-    && /etc/init.d/gridengine-exec start
-
-RUN useradd roddy -d /roddy
-
-
-RUN echo `head -n 1 /etc/hosts | cut -f1` master > /tmp/hostsTmp \
-    && tail -n +2 /etc/hosts >> /tmp/hostsTmp \
-    && cp /tmp/hostsTmp /etc/hosts \
-    && echo master > /etc/hostname \
-	&& hostName=`hostname` \
-    && export HOST=$hostName \
-    && /etc/init.d/gridengine-exec stop \
-    && /etc/init.d/gridengine-master restart \
     && /etc/init.d/gridengine-exec start \
     && qconf -am roddy \
     && qconf -au roddy users \
-    && qconf -as $HOST
-
-
-COPY scripts/sgeInit.sh /roddy/sgeInit.sh
-
-RUN echo `head -n 1 /etc/hosts | cut -f 1` master > /tmp/hostsTmp \
-	&& tail -n +2 /etc/hosts >> /tmp/hostsTmp \
-	&& cp /tmp/hostsTmp /etc/hosts \
-	&& echo master > /etc/hostname \
-	&& cat /etc/hosts \
-	&& hostName=`hostname` \
-    && export HOST=$hostName \
+    && qconf -as $HOST \
     && cd /roddy \
     && chmod 777 sgeInit.sh \
 	&& bash sgeInit.sh \
 	&& rm sgeInit.sh
-
-RUN mkdir /roddy/bin
-
-COPY scripts/sgeResetup.sh /roddy/sgeResetup.sh
-
-# now getting Roddy binary from a public URL since authors indicated this is fine
-RUN wget --quiet -O Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz https://dcc.icgc.org/api/v1/download?fn=/PCAWG/pcawg_dkfz_caller/Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz \
-    && tar zxf Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz \
-    && mv Roddy /roddy/bin/
-
-
-COPY runwrapper.sh /roddy/bin/runwrapper.sh
-
-COPY scripts/run_workflow.pl /roddy/bin/run_workflow.pl
-
-COPY scripts/getFinalCNEFile.py /roddy/bin/getFinalCNEFile.py
-
-COPY scripts/convertTabToJson.py /roddy/bin/convertTabToJson.py
-
-COPY scripts/setupSGE.sh /roddy/bin/sgeConfig.txt
-
-COPY scripts/combineJsons.py /roddy/bin/combineJsons.py
-
-COPY scripts/python_modules /roddy/bin/python_modules/
 
 RUN cd /roddy/bin/Roddy/dist/runtimeDevel \
     && ln -sf groovy* groovy \
@@ -129,19 +111,17 @@ RUN cd /roddy/bin/Roddy/dist/runtimeDevel \
     && ln -sf jdk/jre jre \
     && cd /roddy/bin/Roddy \
     && cp applicationPropertiesAllLocal.ini applicationProperties.ini \
+    && chmod a+x /roddy/sgeResetup.sh \
     && bash /roddy/sgeResetup.sh \
-    && qconf -Mc /roddy/bin/sgeConfig.txt \
-    && mkdir -p /mnt/datastore/workflow_data \
-    && mkdir /roddy/logs
+    && qconf -Mc /roddy/bin/sgeConfig.txt
 
-COPY patches/analysisCopyNumberEstimation.xml /roddy/bin/Roddy/dist/plugins/CopyNumberEstimationWorkflow_1.0.189/resources/configurationFiles/analysisCopyNumberEstimation.xml
+RUN mkdir -p /mnt/datastore/workflow_data \
+    && mkdir -p /roddy/logs \
+    && mkdir -p /data/datastore/ /data/binaries/ \
+    && chmod 777 /data/datastore /data/binaries /mnt/datastore /roddy/bin /roddy/logs
 
 RUN chown -R roddy:roddy /tmp/* \
-    && chown -R roddy:roddy /roddy \
-    && chmod -R 777 /data/datastore /roddy/bin /mnt/datastore /roddy/logs
-
-RUN adduser roddy sudo
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+    && chown -R roddy:roddy /roddy
 
 # use ansible to create our dockerfile, see http://www.ansible.com/2014/02/12/installing-and-building-docker-with-ansible
 RUN mkdir /ansible
@@ -152,7 +132,7 @@ RUN git clone http://github.com/ansible/ansible.git /ansible \
     && git checkout v1.6.10
 ENV PATH /ansible/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV ANSIBLE_LIBRARY /ansible/library
-ENV PYTHONPATH /ansible/lib:$PYTHON_PATH
+ENV PYTHONPATH /ansible/lib:$PYTHONPATH
 
 # setup sge
 WORKDIR /root 
