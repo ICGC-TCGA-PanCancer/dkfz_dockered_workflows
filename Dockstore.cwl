@@ -29,11 +29,15 @@ inputs:
     inputBinding:
       position: 3
       prefix: --tumor-bam
+    secondaryFiles:
+    - .bai
   normal-bam:
     type: File
     inputBinding:
       position: 2
       prefix: --normal-bam
+    secondaryFiles:
+    - .bai
   reference-gz:
     type: File
     inputBinding:
@@ -87,6 +91,7 @@ doc: |
     dockerized and packaged using CWL workflow language, the source code is available on
     GitHub at: https://github.com/ICGC-TCGA-PanCancer/dkfz_dockered_workflows.
 
+    This workflow has been tested using cwltool version *1.0.20180116213856*. Newer cwltool may not work.
 
     ## Run the workflow with your own data
 
@@ -103,7 +108,7 @@ doc: |
     - Docker (1.12.6): follow instructions to install Docker https://docs.docker.com/engine/installation
     - CWL tool
     ```
-    pip install cwltool==1.0.20170217172322
+    pip install cwltool==1.0.20180116213856
     ```
 
     ### Prepare input data
