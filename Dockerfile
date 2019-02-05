@@ -102,8 +102,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && qconf -as $HOST \
     && cd /roddy \
     && chmod 777 sgeInit.sh \
-	&& bash sgeInit.sh \
-	&& rm sgeInit.sh
+    && bash sgeInit.sh \
+    && rm sgeInit.sh
 
 RUN cd /roddy/bin/Roddy/dist/runtimeDevel \
     && ln -sf groovy* groovy \
