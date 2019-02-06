@@ -17,12 +17,12 @@ my ($run_id, $normal_bam, $tumor_bam, $bedpe, $reference, $output_dir);
 my $wfversion = "2.0.0";
 
 GetOptions (
+  "output-dir=s" => \$output_dir,
   "run-id=s"   => \$run_id,
   "normal-bam=s" => \$normal_bam,
   "tumor-bam=s" => \$tumor_bam,
   "delly-bedpe=s" => \$bedpe,
   "reference-gz=s" => \$reference,
-  "output-dir=s" => \$output_dir
 )
 # TODO: need to add all the new params, then symlink the ref files to the right place
  or die("Error in command line arguments\n");
@@ -34,7 +34,7 @@ system("sudo chmod a+rwx /tmp");
 my $pwd = `pwd`;
 print "Present working directory is: $pwd\n";
 
-$ENV{'HOME'} = $output_dir
+$ENV{'HOME'} = $output_dir;
 
 #check assumptions
 run("whoami");
