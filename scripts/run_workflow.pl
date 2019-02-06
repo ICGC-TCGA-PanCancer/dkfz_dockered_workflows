@@ -34,8 +34,6 @@ system("sudo chmod a+rwx /tmp");
 my $pwd = `pwd`;
 print "Present working directory is: $pwd\n";
 
-$ENV{'HOME'} = $output_dir;
-
 #check assumptions
 run("whoami");
 run("env");
@@ -78,7 +76,7 @@ print OUT $config;
 close OUT;
 
 # NOW RUN WORKFLOW
-my $error = system("/bin/bash -c '/roddy/bin/runwrapper.sh'");
+my $error = system("gosu roddy /bin/bash -c '/roddy/bin/runwrapper.sh'");
 
 # MOVE THESE TO THE RIGHT PLACE FOR PROVISION OUT
 system("mv /mnt/datastore/resultdata/* $output_dir");
