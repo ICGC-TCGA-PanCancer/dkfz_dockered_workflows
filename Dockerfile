@@ -79,13 +79,13 @@ RUN wget --quiet -O Roddy_2.2.49_COW_1.0.132-1_CNE_1.0.189.tar.gz https://dcc.ic
 
 COPY patches/analysisCopyNumberEstimation.xml /roddy/bin/Roddy/dist/plugins/CopyNumberEstimationWorkflow_1.0.189/resources/configurationFiles/analysisCopyNumberEstimation.xml
 
-RUN cd /roddy/bin/Roddy/dist/plugins/CopyNumberEstimationWorkflow_1.0.189/resources/configurationFiles
+RUN cd /roddy/bin/Roddy/dist/plugins/CopyNumberEstimationWorkflow_1.0.189/resources/configurationFiles \
     && for f in *.xml; do cat $f |perl -nae 'if(/ memory="(.+?)"/) {$mem=$1; s/ memory=".+?"/ memory="6"/ if $mem < 6}; print' > tmp.xml && mv tmp.xml $f; done
 
-RUN cd /roddy/bin/Roddy/dist/plugins/COWorkflows_1.0.132-1/resources/configurationFiles
+RUN cd /roddy/bin/Roddy/dist/plugins/COWorkflows_1.0.132-1/resources/configurationFiles \
     && for f in *.xml; do cat $f |perl -nae 'if(/ memory="(.+?)"/) {$mem=$1; s/ memory=".+?"/ memory="6"/ if $mem < 6}; print' > tmp.xml && mv tmp.xml $f; done
 
-RUN cd /roddy/bin/Roddy/dist/plugins/DefaultPlugin/resources/configurationFiles
+RUN cd /roddy/bin/Roddy/dist/plugins/DefaultPlugin/resources/configurationFiles \
     && for f in *.xml; do cat $f |perl -nae 'if(/ memory="(.+?)"/) {$mem=$1; s/ memory=".+?"/ memory="6"/ if $mem < 6}; print' > tmp.xml && mv tmp.xml $f; done
 
 
