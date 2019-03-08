@@ -79,7 +79,7 @@ close OUT;
 my $error = system("gosu roddy /bin/bash -c '/roddy/bin/runwrapper.sh'");
 
 # MOVE THESE TO THE RIGHT PLACE FOR PROVISION OUT
-system("mv /mnt/datastore/resultdata/* $output_dir");
+system("sudo mv /mnt/datastore/resultdata/* $output_dir");
 my $resultData = `ls $output_dir`;
 print "Result directory listing is: $resultData\n";
 
