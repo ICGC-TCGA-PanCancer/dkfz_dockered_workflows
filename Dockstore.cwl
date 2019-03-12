@@ -14,7 +14,7 @@ dct:contributor:
 
 requirements:
 - class: DockerRequirement
-  dockerPull: quay.io/pancancer/pcawg-dkfz-workflow:increase_memory_setting
+  dockerPull: quay.io/pancancer/pcawg-dkfz-workflow:2.0.9
 
 cwlVersion: v1.0
 
