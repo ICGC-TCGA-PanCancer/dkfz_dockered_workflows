@@ -11,12 +11,13 @@ use Getopt::Long;
 # creates an INI file, and, finally, executes the workflow.
 
 my @files;
-my ($run_id, $normal_bam, $tumor_bam, $bedpe, $reference);
+my ($run_id, $normal_bam, $tumor_bam, $bedpe, $reference, $output_dir);
 
 # workflow version
 my $wfversion = "2.0.0";
 
 GetOptions (
+  "output-dir=s" => \$output_dir,
   "run-id=s"   => \$run_id,
   "normal-bam=s" => \$normal_bam,
   "tumor-bam=s" => \$tumor_bam,
@@ -42,9 +43,9 @@ run("mkdir -p /data/datastore/normal");
 run("mkdir -p /data/datastore/tumor/");
 run("mkdir -p /data/datastore/delly/");
 run("ln -sf $normal_bam /data/datastore/normal/normal.bam");
-run("ln -sf ${normal_bam}.bai /data/datastore/normal/normal.bam.bai");
+run("ln -sf $normal_bam.bai /data/datastore/normal/normal.bam.bai");
 run("ln -sf $tumor_bam /data/datastore/tumor/tumor.bam");
-run("ln -sf ${tumor_bam}.bai /data/datastore/tumor/tumor.bam.bai");
+run("ln -sf $tumor_bam.bai /data/datastore/tumor/tumor.bam.bai");
 run("ln -sf $bedpe /data/datastore/delly/delly.bedpe.txt");
 run("mkdir -p /mnt/datastore/workflow_data/");
 run("mkdir -p \$TMPDIR/reference");
@@ -75,12 +76,11 @@ print OUT $config;
 close OUT;
 
 # NOW RUN WORKFLOW
-my $error = system("/bin/bash -c '/roddy/bin/runwrapper.sh'");
+my $error = system("gosu roddy /bin/bash -c '/roddy/bin/runwrapper.sh'");
 
 # MOVE THESE TO THE RIGHT PLACE FOR PROVISION OUT
-my $outputDir = "/var/spool/cwl";
-system("mv /mnt/datastore/resultdata/* $outputDir");
-my $resultData = `ls $outputDir`;
+system("sudo mv /mnt/datastore/resultdata/* $output_dir");
+my $resultData = `ls $output_dir`;
 print "Result directory listing is: $resultData\n";
 
 

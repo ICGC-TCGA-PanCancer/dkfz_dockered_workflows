@@ -1,7 +1,7 @@
 #!/bin/bash
 set -x
 
-sudo bash ~/sgeResetup.sh
+gosu roddy /bin/bash /roddy/sgeResetup.sh
 
 CONFIG_FILE=/mnt/datastore/workflow_data/workflow.ini
 
@@ -40,7 +40,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 
 	# Call Roddy
 
-	cd ~/bin/Roddy
+	cd /roddy/bin/Roddy
 
 	export aceseqlog=/roddy/logs/aceseq_$pid.log
 	export aceseqrc=/roddy/logs/aceseq_$pid.rc
