@@ -106,7 +106,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	cp -r $pidPath/roddyExecutionStore $resultLogFolder
 	cp /roddy/logs/*$pid* $resultLogFolder
 	# Tarball of logs folder
-    tar -cvzf ${resultFolder}/${pid}_logs.tar.gz resultLogFolder
+    tar -cvzf ${resultFolder}/${pid}.log.tar.gz resultLogFolder
 
 	export roddyVersionString=`grep useRoddyVersion /roddy/bin/Roddy/applicationPropertiesAllLocal.ini`
 	export pluginVersionString=`grep usePluginVersion /roddy/bin/Roddy/applicationPropertiesAllLocal.ini`
@@ -180,7 +180,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	echo -e "all_somatic\tcaller\tlikely_germline\tpassed_somatic\n${SOMINDELALL}\tPlatypus_DKFZ\t${GERINDELLIKELY}\t${SOMINDELFINAL}" > ${indelJsonTabTempFile}
 	python /roddy/bin/convertTabToJson.py -k indel -f ${indelJsonTabTempFile} -i ${pid} -o ${indelJsonFile} && rm ${indelJsonTabTempFile}
 	
-	python /roddy/bin/combineJsons.py -c ${resultFolder}/${prefixACESeq}.cnv.json -s ${snvJsonFile} -i ${indelJsonFile} -g ${resultFolder}/${prefixACESeq}.cnv.gcbias.json -o ${resultFolder}/${pid}.qc_metrics.dkfz.json -t ${pid}
+	python /roddy/bin/combineJsons.py -c ${resultFolder}/${prefixACESeq}.cnv.json -s ${snvJsonFile} -i ${indelJsonFile} -g ${resultFolder}/${prefixACESeq}.cnv.gcbias.json -o ${resultFolder}/${pid}.qc_metrics.json -t ${pid}
 	tabix -p vcf ${aceSeqVCFFile}
 
 	echo "Create tarballs"
