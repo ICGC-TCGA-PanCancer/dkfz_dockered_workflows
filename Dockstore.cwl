@@ -53,35 +53,61 @@ outputs:
   somatic_cnv_tar_gz:
     type: File
     outputBinding:
-      glob: '*.somatic.cnv.tar.gz*'
+      glob: '*.somatic.cnv.tar.gz'
+    secondaryFiles:
+    - .md5
   somatic_cnv_vcf_gz:
     type: File
     outputBinding:
-      glob: '*.somatic.cnv.vcf.gz*'
+      glob: '*.somatic.cnv.vcf.gz'
+    secondaryFiles:
+    - .md5
+    - .tbi
+    - .tbi.md5
   germline_indel_vcf_gz:
     type: File
     outputBinding:
-      glob: '*.germline.indel.vcf.gz*'
+      glob: '*.germline.indel.vcf.gz'
+    secondaryFiles:
+    - .md5
+    - .tbi
+    - .tbi.md5
   somatic_indel_tar_gz:
     type: File
     outputBinding:
-      glob: '*.somatic.indel.tar.gz*'
+      glob: '*.somatic.indel.tar.gz'
+    secondaryFiles:
+    - .md5
   somatic_indel_vcf_gz:
     type: File
     outputBinding:
-      glob: '*.somatic.indel.vcf.gz*'
+      glob: '*.somatic.indel.vcf.gz'
+    secondaryFiles:
+    - .md5
+    - .tbi
+    - .tbi.md5
   germline_snv_mnv_vcf_gz:
     type: File
     outputBinding:
-      glob: '*.germline.snv_mnv.vcf.gz*'
+      glob: '*.germline.snv_mnv.vcf.gz'
+    secondaryFiles:
+    - .md5
+    - .tbi
+    - .tbi.md5
   somatic_snv_mnv_tar_gz:
     type: File
     outputBinding:
-      glob: '*.somatic.snv_mnv.tar.gz*'
+      glob: '*.somatic.snv_mnv.tar.gz'
+    secondaryFiles:
+    - .md5
   somatic_snv_mnv_vcf_gz:
     type: File
     outputBinding:
-      glob: '*.somatic.snv_mnv.vcf.gz*'
+      glob: '*.somatic.snv_mnv.vcf.gz'
+    secondaryFiles:
+    - .md5
+    - .tbi
+    - .tbi.md5
   qc_metrics:
     type: File
     outputBinding:
@@ -89,7 +115,7 @@ outputs:
   logs:
     type: File
     outputBinding:
-      glob: '*logs.tar.gz'
+      glob: '*.log.tar.gz'
 
 baseCommand: [/start.sh, perl, /roddy/bin/run_workflow.pl]
 doc: |
