@@ -106,7 +106,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	cp -r $pidPath/roddyExecutionStore $resultLogFolder
 	cp /roddy/logs/*$pid* $resultLogFolder
 	# Tarball of logs folder
-    tar -cvzf ${resultFolder}/${pid}.log.tar.gz resultLogFolder
+	tar -cvzf ${resultFolder}/${pid}.log.tar.gz resultLogFolder
 
 	export roddyVersionString=`grep useRoddyVersion /roddy/bin/Roddy/applicationPropertiesAllLocal.ini`
 	export pluginVersionString=`grep usePluginVersion /roddy/bin/Roddy/applicationPropertiesAllLocal.ini`
