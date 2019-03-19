@@ -111,11 +111,7 @@ outputs:
   qc_metrics:
     type: File
     outputBinding:
-      glob: '*.qc_metrics.dkfz.json'
-  logs:
-    type: File
-    outputBinding:
-      glob: '*.log.tar.gz'
+      glob: '*.dkfz.qc_metrics.tar.gz'
 
 baseCommand: [/start.sh, perl, /roddy/bin/run_workflow.pl]
 doc: |
