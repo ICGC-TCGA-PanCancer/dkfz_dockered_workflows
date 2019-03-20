@@ -190,7 +190,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	(cd ${pidPath}; tar -cvzf ${aceSeqOptFile} ACEseq ) &
 
 	# tar gzip ${pid}.dkfz.qc_metrics.json
-	tar -cvzf ${resultFolder}/${pid}.dkfz.qc_metrics.tar.gz -C ${resultFolder} ${pid}.dkfz.qc_metrics.json
+	tar -cvzf ${resultFolder}/${pid}.dkfz.${date}.qc_metrics.tar.gz -C ${resultFolder} ${pid}.dkfz.qc_metrics.json
 
 	wait
 
