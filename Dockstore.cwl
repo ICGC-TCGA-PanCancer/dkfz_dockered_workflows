@@ -112,6 +112,8 @@ outputs:
     type: File
     outputBinding:
       glob: '*.dkfz.qc_metrics.tar.gz'
+    secondaryFiles:
+    - .md5
 
 baseCommand: [/start.sh, perl, /roddy/bin/run_workflow.pl]
 doc: |
