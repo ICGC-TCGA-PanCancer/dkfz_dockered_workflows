@@ -2,6 +2,7 @@
 
 use strict;
 use Getopt::Long;
+use Time::Piece;
 
 ########
 # ABOUT
@@ -12,6 +13,7 @@ use Getopt::Long;
 
 my @files;
 my ($run_id, $normal_bam, $tumor_bam, $bedpe, $reference, $output_dir);
+my $date = localtime->strftime('%Y%m%d');
 
 # workflow version
 my $wfversion = "2.0.0";
@@ -68,7 +70,7 @@ aliquotIDs=( $run_id )
 runACEeq=true
 runSNVCalling=true
 runIndelCalling=true
-date=20160520
+date=$date
 END
 
 open OUT, ">/mnt/datastore/workflow_data/workflow.ini" or die;
