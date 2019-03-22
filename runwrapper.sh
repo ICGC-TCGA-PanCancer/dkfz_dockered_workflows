@@ -178,7 +178,7 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	echo -e "all_somatic\tcaller\tlikely_germline\tpassed_somatic\n${SOMINDELALL}\tPlatypus_DKFZ\t${GERINDELLIKELY}\t${SOMINDELFINAL}" > ${indelJsonTabTempFile}
 	python /roddy/bin/convertTabToJson.py -k indel -f ${indelJsonTabTempFile} -i ${pid} -o ${indelJsonFile} && rm ${indelJsonTabTempFile}
 	
-	python /roddy/bin/combineJsons.py -c ${resultFolder}/${prefixACESeq}.cnv.json -s ${snvJsonFile} -i ${indelJsonFile} -g ${resultFolder}/${prefixACESeq}.cnv.gcbias.json -o ${resultFolder}/${pid}.qc_metrics.dkfz.json -t ${pid}
+	python /roddy/bin/combineJsons.py -c ${resultFolder}/${prefixACESeq}.cnv.json -s ${snvJsonFile} -i ${indelJsonFile} -g ${resultFolder}/${prefixACESeq}.cnv.gcbias.json -o ${resultFolder}/${pid}.dkfz.qc_metrics.json -t ${pid}
 	tabix -p vcf ${aceSeqVCFFile}
 
 	echo "Create tarballs"
@@ -188,6 +188,9 @@ for (( i=0; i<${#tumorBams[@]}; i++ )); do
 	(cd ${pidPath}; tar -cvzf ${indelOptFile} platypus_indel ) &
 	#And finally the aceseq tarball
 	(cd ${pidPath}; tar -cvzf ${aceSeqOptFile} ACEseq ) &
+
+	# tar gzip ${pid}.dkfz.qc_metrics.json
+	tar -cvzf ${resultFolder}/${pid}.dkfz.${date}.qc_metrics.tar.gz -C ${resultFolder} ${pid}.dkfz.qc_metrics.json
 
 	wait
 
