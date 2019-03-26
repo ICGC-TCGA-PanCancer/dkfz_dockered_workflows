@@ -33,7 +33,7 @@ GetOptions (
 
 if ($run_id eq "")
 {
-  $run_id = get_aliquot_id_from_bam($tumor_bam)
+  $run_id = get_aliquot_id_from_bam($tumor_bam);
   print "run-id is: $run_id\n";
 }
 
