@@ -34,8 +34,14 @@ GetOptions (
 if ($run_id eq "")
 {
   $run_id = get_aliquot_id_from_bam($tumor_bam);
-  print "run-id is: $run_id\n";
 }
+
+if ($run_id =~ /^[a-zA-Z0-9_-]+$/) {
+    print "run-id is: $run_id\n";
+} else {
+    die "Found run-id contains invalid character: $run_id\n";
+}
+
 
 # PARSE OPTIONS
 system("sudo chmod a+rwx /tmp");

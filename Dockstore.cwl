@@ -14,7 +14,7 @@ dct:contributor:
 
 requirements:
 - class: DockerRequirement
-  dockerPull: quay.io/pancancer/pcawg-dkfz-workflow:2.1.0
+  dockerPull: quay.io/pancancer/pcawg-dkfz-workflow:standard-output-names
 
 cwlVersion: v1.0
 
