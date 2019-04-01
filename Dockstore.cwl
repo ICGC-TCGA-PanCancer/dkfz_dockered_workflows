@@ -19,23 +19,18 @@ requirements:
 cwlVersion: v1.0
 
 inputs:
-  run-id:
-    type: string?
-    inputBinding:
-      position: 5
-      prefix: --run-id
-  tumor-bam:
-    type: File
-    inputBinding:
-      position: 2
-      prefix: --tumor-bam
-    secondaryFiles:
-    - .bai
   normal-bam:
     type: File
     inputBinding:
       position: 1
       prefix: --normal-bam
+    secondaryFiles:
+    - .bai
+  tumor-bam:
+    type: File
+    inputBinding:
+      position: 2
+      prefix: --tumor-bam
     secondaryFiles:
     - .bai
   reference-gz:
@@ -48,6 +43,12 @@ inputs:
     inputBinding:
       position: 4
       prefix: --delly-bedpe
+  run-id:
+    type: string?
+    inputBinding:
+      position: 5
+      prefix: --run-id
+
 
 outputs:
   somatic_cnv_tar_gz:

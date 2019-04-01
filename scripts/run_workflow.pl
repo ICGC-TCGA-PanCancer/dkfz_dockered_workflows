@@ -39,9 +39,8 @@ if ($run_id eq "")
 if ($run_id =~ /^[a-zA-Z0-9_-]+$/) {
     print "run-id is: $run_id\n";
 } else {
-    die "Found run-id contains invalid character: $run_id\n";
+    die "Found run-id containing invalid character: $run_id\n";
 }
-
 
 # PARSE OPTIONS
 system("sudo chmod a+rwx /tmp");
