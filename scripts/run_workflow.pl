@@ -33,7 +33,7 @@ GetOptions (
 
 if ($run_id eq "")
 {
-  $run_id = get_aliquot_id_from_bam($tumor_bam);
+  $run_id = get_run_id_from_sm_in_bam($tumor_bam);
 }
 
 if ($run_id =~ /^[a-zA-Z0-9_-]+$/) {
@@ -109,7 +109,7 @@ sub run {
   if ($error) { exit($error); }
 }
 
-sub get_aliquot_id_from_bam {
+sub get_run_id_from_sm_in_bam {
   my $bam = shift;
   die "BAM file does not exist: $bam" unless ( -e $bam );
 
