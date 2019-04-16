@@ -37,7 +37,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # install perl modules
-RUN cpanm Math::CDF
+RUN cpanm --no-lwp Math::CDF Capture::Tiny
 
 # install python modules
 RUN pip install --index-url https://pypi.python.org/simple/ --upgrade pip && hash -r

@@ -14,40 +14,41 @@ dct:contributor:
 
 requirements:
 - class: DockerRequirement
-  dockerPull: quay.io/pancancer/pcawg-dkfz-workflow:2.1.0
+  dockerPull: quay.io/pancancer/pcawg-dkfz-workflow:standard-output-names
 
 cwlVersion: v1.0
 
 inputs:
-  run-id:
-    type: string
-    inputBinding:
-      position: 1
-      prefix: --run-id
-  tumor-bam:
-    type: File
-    inputBinding:
-      position: 3
-      prefix: --tumor-bam
-    secondaryFiles:
-    - .bai
   normal-bam:
     type: File
     inputBinding:
-      position: 2
+      position: 1
       prefix: --normal-bam
+    secondaryFiles:
+    - .bai
+  tumor-bam:
+    type: File
+    inputBinding:
+      position: 2
+      prefix: --tumor-bam
     secondaryFiles:
     - .bai
   reference-gz:
     type: File
     inputBinding:
-      position: 4
+      position: 3
       prefix: --reference-gz
   delly-bedpe:
     type: File
     inputBinding:
-      position: 5
+      position: 4
       prefix: --delly-bedpe
+  run-id:
+    type: string?
+    inputBinding:
+      position: 5
+      prefix: --run-id
+
 
 outputs:
   somatic_cnv_tar_gz:
